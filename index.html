@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gateway Public High School - Rehman Pura, Lahore</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Alpine.js for lightweight interactive reactive state management -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            blue: '#1e3a8a',
+                            lightBlue: '#3b82f6',
+                            darkBlue: '#0f172a',
+                            yellow: '#eab308',
+                            accentYellow: '#f59e0b',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .hero-gradient {
+            background: linear-gradient(rgba(15, 23, 42, 0.82), rgba(30, 58, 138, 0.88)), 
+                        url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+        }
+        .quick-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .quick-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 24px -10px rgba(30, 58, 138, 0.3);
+        }
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        .animate-marquee {
+            display: inline-block;
+            white-space: nowrap;
+            animation: marquee 25s linear infinite;
+        }
+        .animate-marquee:hover {
+            animation-play-state: paused;
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-700 bg-gray-50 flex flex-col min-h-screen" x-data="schoolApp()">
+
+    <!-- Floating Toast Notification System -->
+    <div class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 max-w-md">
+        <template x-for="toast in toasts" :key="toast.id">
+            <div x-transition:enter="transition ease-out duration-300 transform"
+                 x-transition:enter-start="opacity-0 translate-y-2"
+                 x-transition:enter-end="opacity-100 translate-y-0"
+                 x-transition:leave="transition ease-in duration-200"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0"
+                 :class="{
+                    'bg-green-600': toast.type === 'success',
+                    'bg-blue-600': toast.type === 'info',
+                    'bg-red-600': toast.type === 'error',
+                    'bg-amber-600': toast.type === 'warning'
+                 }"
+                 class="text-white px-5 py-3 rounded-lg shadow-xl flex items-center justify-between space-x-4">
+                <div class="flex items-center space-x-3">
+                    <i :class="{
+                        'fa-circle-check': toast.type === 'success',
+                        'fa-circle-info': toast.type === 'info',
+                        'fa-triangle-exclamation': toast.type === 'warning',
+                        'fa-circle-xmark': toast.type === 'error'
+                    }" class="fas text-lg"></i>
+                    <span class="text-sm font-medium" x-text="toast.message"></span>
+                </div>
+                <button @click="removeToast(toast.id)" class="text-white hover:text-gray-200">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </template>
+    </div>
+
+    <!-- Top Announcement & Quick Contact Bar -->
+    <header class="w-full">
+        <div class="bg-brand-darkBlue text-gray-200 text-xs md:text-sm py-2 px-4 md:px-12 flex flex-wrap justify-between items-center border-b border-blue-900">
+            <div class="flex items-center space-x-6">
+                <span class="flex items-center"><i class="fas fa-phone-alt mr-2 text-brand-yellow"></i> Parent Helpline: +92 370-7652226 | +92 300-4272373</span>
+                <span class="hidden lg:flex items-center"><i class="fas fa-envelope mr-2 text-brand-yellow"></i> info@gatewaypublic.edu.pk</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span class="hidden sm:inline-block text-gray-400">Rehman Pura, Lahore</span>
+                <div class="flex space-x-3 text-sm">
+                    <a href="javascript:void(0)" @click="showToast('Facebook page redirected', 'info')" class="hover:text-brand-yellow transition"><i class="fab fa-facebook-f"></i></a>
+                    <a href="javascript:void(0)" @click="showToast('Twitter handle redirected', 'info')" class="hover:text-brand-yellow transition"><i class="fab fa-twitter"></i></a>
+                    <a href="javascript:void(0)" @click="showToast('YouTube channel redirected', 'info')" class="hover:text-brand-yellow transition"><i class="fab fa-youtube"></i></a>
+                    <a href="javascript:void(0)" @click="showToast('Instagram profile redirected', 'info')" class="hover:text-brand-yellow transition"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- News Flash Marquee Ticker -->
+        <div class="bg-brand-blue text-white py-1.5 px-4 flex items-center text-xs md:text-sm overflow-hidden border-b border-blue-800">
+            <span class="bg-brand-yellow text-brand-darkBlue font-bold px-3 py-0.5 rounded text-xs uppercase tracking-wider whitespace-nowrap mr-3 z-10 shadow">
+                <i class="fas fa-bullhorn mr-1"></i> Latest News
+            </span>
+            <div class="overflow-hidden w-full relative">
+                <div class="animate-marquee">
+                     admissions Open for Session 2026-2027! Apply online today. &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; 🏆 Gateway Robotics Team wins Annual Punjab STEM Challenge! &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; 📅 Mid-term Examination Date Sheet published in Downloads Section. &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; 🌿 Parent-Teacher Conference scheduled for October 25, 2026.
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Responsive Navigation Bar -->
+        <nav class="bg-white shadow-md sticky top-0 z-40 border-b border-gray-100">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <!-- Brand Logo & Title -->
+                <a href="javascript:void(0)" @click="setActiveTab('home')" class="flex items-center space-x-3 group">
+                    <div class="bg-brand-blue text-brand-yellow w-12 h-12 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-105 transition duration-300">
+                        <i class="fas fa-graduation-cap text-2xl"></i>
+                    </div>
+                    <div>
+                        <span class="text-xl md:text-2xl font-extrabold text-brand-blue uppercase tracking-tight leading-none block">Gateway Public</span>
+                        <span class="text-xs md:text-sm font-semibold text-brand-yellow tracking-widest uppercase block">High School Lahore</span>
+                    </div>
+                </a>
+
+                <!-- Desktop Navigation Links -->
+                <div class="hidden lg:flex space-x-1 xl:space-x-3 text-gray-800 font-semibold text-sm items-center">
+                    <template x-for="tab in navTabs" :key="tab.id">
+                        <button @click="setActiveTab(tab.id)"
+                                :class="activeTab === tab.id ? 'text-brand-blue bg-blue-50 border-b-2 border-brand-blue font-bold' : 'text-gray-700 hover:text-brand-blue hover:bg-gray-50'"
+                                class="px-3 py-2 rounded-md transition duration-150 flex items-center space-x-1">
+                            <i :class="tab.icon" class="text-xs opacity-75"></i>
+                            <span x-text="tab.label"></span>
+                        </button>
+                    </template>
+                    
+                    <button @click="setActiveTab('portal')" class="bg-brand-yellow text-brand-darkBlue font-bold px-4 py-2 rounded-lg hover:bg-amber-400 transition shadow-sm flex items-center space-x-1.5 ml-2">
+                        <i class="fas fa-lock text-xs"></i>
+                        <span>Portals</span>
+                    </button>
+                </div>
+
+                <!-- Mobile Menu Toggle Button -->
+                <div class="lg:hidden">
+                    <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-brand-blue focus:outline-none p-2 rounded-lg hover:bg-gray-100">
+                        <i :class="mobileMenuOpen ? 'fa-times' : 'fa-bars'" class="fas text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Navigation Drawer -->
+            <div x-show="mobileMenuOpen" 
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0 -translate-y-4"
+                 x-transition:enter-end="opacity-100 translate-y-0"
+                 x-transition:leave="transition ease-in duration-150"
+                 x-transition:leave-start="opacity-100 translate-y-0"
+                 x-transition:leave-end="opacity-0 -translate-y-4"
+                 class="lg:hidden bg-white border-b border-gray-200 px-4 pt-2 pb-4 space-y-2 shadow-xl">
+                <template x-for="tab in navTabs" :key="tab.id">
+                    <button @click="setActiveTab(tab.id); mobileMenuOpen = false"
+                            :class="activeTab === tab.id ? 'bg-brand-blue text-white font-bold' : 'text-gray-700 hover:bg-gray-100'"
+                            class="w-full text-left px-4 py-2.5 rounded-lg transition flex items-center space-x-3 text-sm">
+                        <i :class="tab.icon" class="w-5 text-center"></i>
+                        <span x-text="tab.label"></span>
+                    </button>
+                </template>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content Area Dynamic Views -->
+    <main class="flex-grow">
+
+        <!-- ==================== TAB 1: HOME VIEW ==================== -->
+        <section x-show="activeTab === 'home'" x-transition:enter="transition ease-out duration-300 opacity-0 transform scale-98" x-transition:enter-end="opacity-100 scale-100">
+            <!-- Hero Banner -->
+            <header class="hero-section hero-gradient min-h-[500px] flex flex-col items-center justify-center text-center text-white px-4 relative py-16">
+                <div class="max-w-4xl mx-auto space-y-6">
+                    <span class="bg-brand-yellow/90 text-brand-darkBlue font-extrabold px-4 py-1.5 rounded-full text-xs md:text-sm uppercase tracking-widest inline-block shadow">
+                        Nurturing Leaders of Tomorrow
+                    </span>
+                    <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight drop-shadow-md">
+                        Welcome to <span class="text-brand-yellow">Gateway Public High School</span>
+                    </h1>
+                    <p class="text-lg md:text-2xl font-light max-w-2xl mx-auto text-gray-200 drop-shadow">
+                        Empowering 21st-Century Leaders through STEM, Robotics, Character Building & Academic Excellence in Lahore.
+                    </p>
+                    <div class="flex flex-wrap justify-center gap-4 pt-4">
+                        <button @click="setActiveTab('admissions')" class="bg-brand-yellow text-brand-darkBlue font-bold py-3.5 px-8 rounded-full hover:bg-amber-400 transition transform hover:-translate-y-0.5 shadow-xl text-base flex items-center space-x-2">
+                            <span>Apply for Admission</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                        <button @click="setActiveTab('about')" class="bg-white/10 hover:bg-white/20 text-white border border-white/30 font-semibold py-3.5 px-8 rounded-full transition text-base backdrop-blur-sm">
+                            Explore Our Campus
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Quick Action Cards Bar (Overlapping Hero) -->
+            <div class="container mx-auto -mt-10 relative z-20 px-4">
+                <div class="bg-white rounded-2xl shadow-xl p-4 grid grid-cols-2 md:grid-cols-5 gap-3 border border-gray-100">
+                    <button @click="setActiveTab('about')" class="quick-card flex flex-col items-center p-3 rounded-xl hover:bg-blue-50 text-gray-700 hover:text-brand-blue transition text-center">
+                        <div class="w-12 h-12 rounded-full bg-blue-100 text-brand-blue flex items-center justify-center mb-2 text-xl">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        <span class="text-xs md:text-sm font-bold">About School</span>
+                    </button>
+                    <button @click="setActiveTab('admissions')" class="quick-card flex flex-col items-center p-3 rounded-xl hover:bg-blue-50 text-gray-700 hover:text-brand-blue transition text-center">
+                        <div class="w-12 h-12 rounded-full bg-amber-100 text-brand-yellow flex items-center justify-center mb-2 text-xl">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <span class="text-xs md:text-sm font-bold">Admissions</span>
+                    </button>
+                    <button @click="setActiveTab('calendar')" class="quick-card flex flex-col items-center p-3 rounded-xl hover:bg-blue-50 text-gray-700 hover:text-brand-blue transition text-center">
+                        <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mb-2 text-xl">
+                            <i class="far fa-calendar-alt"></i>
+                        </div>
+                        <span class="text-xs md:text-sm font-bold">Academic Calendar</span>
+                    </button>
+                    <button @click="setActiveTab('downloads')" class="quick-card flex flex-col items-center p-3 rounded-xl hover:bg-blue-50 text-gray-700 hover:text-brand-blue transition text-center">
+                        <div class="w-12 h-12 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center mb-2 text-xl">
+                            <i class="fas fa-file-arrow-down"></i>
+                        </div>
+                        <span class="text-xs md:text-sm font-bold">Downloads</span>
+                    </button>
+                    <button @click="setActiveTab('portal')" class="quick-card flex flex-col items-center p-3 rounded-xl hover:bg-blue-50 text-gray-700 hover:text-brand-blue transition text-center col-span-2 md:col-span-1">
+                        <div class="w-12 h-12 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mb-2 text-xl">
+                            <i class="fas fa-id-card"></i>
+                        </div>
+                        <span class="text-xs md:text-sm font-bold">Student Portal</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dynamic Statistics Counter Bar -->
+            <section class="py-12 bg-white mt-8 border-b border-gray-100">
+                <div class="container mx-auto px-4">
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+                        <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                            <i class="fas fa-user-graduate text-3xl text-brand-blue mb-2"></i>
+                            <div class="text-3xl md:text-4xl font-black text-brand-darkBlue" x-text="stats.students + '+'">1200+</div>
+                            <div class="text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider mt-1">Enrolled Students</div>
+                        </div>
+                        <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                            <i class="fas fa-chalkboard-teacher text-3xl text-brand-yellow mb-2"></i>
+                            <div class="text-3xl md:text-4xl font-black text-brand-darkBlue" x-text="stats.teachers + '+'">65+</div>
+                            <div class="text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider mt-1">Qualified Faculty</div>
+                        </div>
+                        <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                            <i class="fas fa-award text-3xl text-brand-blue mb-2"></i>
+                            <div class="text-3xl md:text-4xl font-black text-brand-darkBlue" x-text="stats.passRate + '%'">99%</div>
+                            <div class="text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider mt-1">Matric Board Success</div>
+                        </div>
+                        <div class="p-4 bg-gray-50 rounded-xl border border-gray-100">
+                            <i class="fas fa-clock text-3xl text-brand-yellow mb-2"></i>
+                            <div class="text-3xl md:text-4xl font-black text-brand-darkBlue" x-text="stats.years + ' Yrs'">25 Yrs</div>
+                            <div class="text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wider mt-1">Academic Excellence</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Core Pillars Section -->
+            <section class="py-16 bg-gray-50">
+                <div class="container mx-auto px-4">
+                    <div class="text-center max-w-2xl mx-auto mb-12">
+                        <span class="text-brand-blue font-bold text-xs uppercase tracking-widest bg-blue-100 px-3 py-1 rounded-full">Our Distinction</span>
+                        <h2 class="text-3xl font-extrabold text-brand-darkBlue mt-2">Why Choose Gateway Public High School?</h2>
+                        <p class="text-gray-600 mt-2 text-sm md:text-base">We combine scholastic excellence with character building, digital skills, and creative problem solving.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition border-t-4 border-brand-blue">
+                            <div class="w-12 h-12 bg-blue-50 text-brand-blue rounded-xl flex items-center justify-center mb-4 text-xl">
+                                <i class="fas fa-book-open"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-brand-darkBlue mb-2">Modern Curriculum</h3>
+                            <p class="text-xs text-gray-600 leading-relaxed mb-4">Aligned with the Lahore Board standards integrated with international STEM principles.</p>
+                            <button @click="setActiveTab('academics')" class="text-brand-blue font-semibold text-xs hover:underline inline-flex items-center">
+                                Explore Syllabus <i class="fas fa-arrow-right ml-1"></i>
+                            </button>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition border-t-4 border-brand-yellow">
+                            <div class="w-12 h-12 bg-amber-50 text-brand-yellow rounded-xl flex items-center justify-center mb-4 text-xl">
+                                <i class="fas fa-microchip"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-brand-darkBlue mb-2">Robotics & AI Labs</h3>
+                            <p class="text-xs text-gray-600 leading-relaxed mb-4">Hands-on experience with micro-controllers, coding, and automated design for young minds.</p>
+                            <button @click="setActiveTab('academics')" class="text-brand-blue font-semibold text-xs hover:underline inline-flex items-center">
+                                View STEM Lab <i class="fas fa-arrow-right ml-1"></i>
+                            </button>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition border-t-4 border-brand-blue">
+                            <div class="w-12 h-12 bg-blue-50 text-brand-blue rounded-xl flex items-center justify-center mb-4 text-xl">
+                                <i class="fas fa-hands-holding-child"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-brand-darkBlue mb-2">Moral & Ethical Growth</h3>
+                            <p class="text-xs text-gray-600 leading-relaxed mb-4">Strong emphasis on Islamic values, discipline, empathy, and community service.</p>
+                            <button @click="setActiveTab('about')" class="text-brand-blue font-semibold text-xs hover:underline inline-flex items-center">
+                                Our Ethos <i class="fas fa-arrow-right ml-1"></i>
+                            </button>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition border-t-4 border-brand-yellow">
+                            <div class="w-12 h-12 bg-amber-50 text-brand-yellow rounded-xl flex items-center justify-center mb-4 text-xl">
+                                <i class="fas fa-futbol"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-brand-darkBlue mb-2">Sports & Co-Curricular</h3>
+                            <p class="text-xs text-gray-600 leading-relaxed mb-4">Cricket, football, debate societies, science expos, and annual drama productions.</p>
+                            <button @click="setActiveTab('about')" class="text-brand-blue font-semibold text-xs hover:underline inline-flex items-center">
+                                View Activities <i class="fas fa-arrow-right ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Testimonials & Reviews -->
+            <section class="py-16 bg-white">
+                <div class="container mx-auto px-4">
+                    <div class="text-center max-w-xl mx-auto mb-10">
+                        <span class="text-brand-blue font-bold text-xs uppercase tracking-widest bg-blue-100 px-3 py-1 rounded-full">Community Voice</span>
+                        <h2 class="text-3xl font-extrabold text-brand-darkBlue mt-2">What Parents & Students Say</h2>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="p-6 rounded-2xl bg-gray-50 border border-gray-100 relative">
+                            <i class="fas fa-quote-left text-3xl text-brand-yellow/30 absolute top-4 right-4"></i>
+                            <div class="flex items-center space-x-1 text-amber-400 mb-3 text-xs">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
+                            <p class="text-xs md:text-sm text-gray-600 italic mb-4">"Gateway Public High School has transformed my son's attitude towards learning. The robotics program and supportive teachers in Rehman Pura have boosted his confidence tremendously."</p>
+                            <div class="flex items-center space-x-3">
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80" alt="Parent" class="w-10 h-10 rounded-full object-cover">
+                                <div>
+                                    <h4 class="text-sm font-bold text-brand-darkBlue">Muhammad Tariq</h4>
+                                    <p class="text-xs text-gray-500">Parent of Grade 8 Student</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-6 rounded-2xl bg-gray-50 border border-gray-100 relative">
+                            <i class="fas fa-quote-left text-3xl text-brand-yellow/30 absolute top-4 right-4"></i>
+                            <div class="flex items-center space-x-1 text-amber-400 mb-3 text-xs">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
+                            <p class="text-xs md:text-sm text-gray-600 italic mb-4">"The teachers here explain concepts visually rather than relying on rote memorization. Science practicals in our digital lab helped me score 95% in matriculation."</p>
+                            <div class="flex items-center space-x-3">
+                                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80" alt="Student" class="w-10 h-10 rounded-full object-cover">
+                                <div>
+                                    <h4 class="text-sm font-bold text-brand-darkBlue">Ayesha Fatima</h4>
+                                    <p class="text-xs text-gray-500">Alumni (Batch 2025)</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-6 rounded-2xl bg-gray-50 border border-gray-100 relative">
+                            <i class="fas fa-quote-left text-3xl text-brand-yellow/30 absolute top-4 right-4"></i>
+                            <div class="flex items-center space-x-1 text-amber-400 mb-3 text-xs">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                            </div>
+                            <p class="text-xs md:text-sm text-gray-600 italic mb-4">"Clear parent communication, efficient online portal for monitoring attendance and grades, plus dedicated staff. Highly recommended in Lahore!"</p>
+                            <div class="flex items-center space-x-3">
+                                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&q=80" alt="Parent" class="w-10 h-10 rounded-full object-cover">
+                                <div>
+                                    <h4 class="text-sm font-bold text-brand-darkBlue">Dr. Shahzad Ahmed</h4>
+                                    <p class="text-xs text-gray-500">Parent of Grade 5 Student</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <!-- ==================== TAB 2: ABOUT US VIEW ==================== -->
+        <section x-show="activeTab === 'about'" x-transition:enter="transition ease-out duration-300 opacity-0 transform scale-98" class="py-12 bg-gray-50">
+            <div class="container mx-auto px-4 space-y-12">
+                <!-- Page Banner Header -->
+                <div class="bg-brand-blue text-white rounded-3xl p-8 md:p-12 shadow-xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between">
+                    <div class="z-10 max-w-xl space-y-3">
+                        <span class="bg-brand-yellow text-brand-darkBlue font-extrabold px-3 py-1 rounded-full text-xs uppercase">About Gateway</span>
+                        <h2 class="text-3xl md:text-5xl font-black">Our History & Ethos</h2>
+                        <p class="text-blue-100 text-sm md:text-base">Established in Rehman Pura, Lahore, with a commitment to providing modern, accessible, and high-quality education.</p>
+                    </div>
+                    <i class="fas fa-school text-white/10 text-9xl absolute -right-6 -bottom-6 pointer-events-none"></i>
+                </div>
+
+                <!-- Principal Message -->
+                <div class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100 grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=600&q=80" alt="Principal" class="rounded-2xl shadow-lg w-full h-80 object-cover">
+                        <div class="absolute bottom-3 left-3 right-3 bg-brand-darkBlue/90 backdrop-blur-md text-white p-3 rounded-xl text-center">
+                            <h4 class="font-bold text-sm">Prof. M. Akram Malik</h4>
+                            <p class="text-xs text-brand-yellow">Principal & Educationist</p>
+                        </div>
+                    </div>
+                    <div class="md:col-span-2 space-y-4">
+                        <span class="text-brand-blue font-bold text-xs uppercase tracking-widest">Leadership Message</span>
+                        <h3 class="text-2xl font-bold text-brand-darkBlue">Message from the Principal</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed italic">
+                            "At Gateway Public High School, we do not merely teach textbooks; we cultivate curiosity, critical thinking, and moral strength. Our campus in Lahore is designed to offer a safe, modern environment where every child discovers their potential through academics, technology, and sports."
+                        </p>
+                        <p class="text-xs text-gray-500">M.Sc. Physics (Punjab University), 25+ Years in Educational Administration.</p>
+                    </div>
+                </div>
+
+                <!-- Vision, Mission, Values Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <div class="w-12 h-12 bg-blue-100 text-brand-blue rounded-xl flex items-center justify-center mb-4 text-xl">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-brand-darkBlue mb-2">Our Vision</h3>
+                        <p class="text-xs text-gray-600 leading-relaxed">To become a center of educational excellence where students evolve into self-reliant, ethical, and global innovators.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <div class="w-12 h-12 bg-amber-100 text-brand-yellow rounded-xl flex items-center justify-center mb-4 text-xl">
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-brand-darkBlue mb-2">Our Mission</h3>
+                        <p class="text-xs text-gray-600 leading-relaxed">Delivering comprehensive education that integrates board curricula with STEM, digital literacy, and personal character development.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center mb-4 text-xl">
+                            <i class="fas fa-gem"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-brand-darkBlue mb-2">Core Values</h3>
+                        <p class="text-xs text-gray-600 leading-relaxed">Integrity, Discipline, Academic Rigor, Inclusivity, and Continuous Technological Innovation in teaching methods.</p>
+                    </div>
+                </div>
+
+                <!-- Faculty Directory Section with Search -->
+                <div class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100 space-y-6">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div>
+                            <h3 class="text-2xl font-bold text-brand-darkBlue">Faculty & Staff Directory</h3>
+                            <p class="text-xs text-gray-500">Meet our experienced, dedicated educators</p>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <input type="text" x-model="facultySearch" placeholder="Search teacher or subject..." class="px-4 py-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-blue outline-none w-full md:w-60">
+                            <select x-model="facultyDepartment" class="px-3 py-2 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-blue outline-none">
+                                <option value="All">All Departments</option>
+                                <option value="Science">Science & Maths</option>
+                                <option value="Computer">Computer & AI</option>
+                                <option value="Languages">Languages & Humanities</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <template x-for="member in filteredFaculty" :key="member.id">
+                            <div class="bg-gray-50 rounded-xl p-4 border border-gray-100 hover:shadow-md transition text-center">
+                                <img :src="member.image" :alt="member.name" class="w-20 h-20 rounded-full mx-auto object-cover mb-3 shadow">
+                                <h4 class="font-bold text-sm text-brand-darkBlue" x-text="member.name"></h4>
+                                <p class="text-xs text-brand-blue font-semibold" x-text="member.role"></p>
+                                <span class="inline-block bg-gray-200 text-gray-700 text-[10px] px-2 py-0.5 rounded-full mt-2" x-text="member.dept"></span>
+                                <p class="text-[11px] text-gray-500 mt-2" x-text="member.qualification"></p>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Facilities Gallery -->
+                <div class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100 space-y-6">
+                    <h3 class="text-2xl font-bold text-brand-darkBlue">Campus Facilities</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="rounded-xl overflow-hidden group border border-gray-100 shadow-sm">
+                            <div class="h-44 overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" alt="Robotics Lab">
+                            </div>
+                            <div class="p-4">
+                                <h4 class="font-bold text-sm text-brand-darkBlue">Robotics & Computer Lab</h4>
+                                <p class="text-xs text-gray-500 mt-1">High-speed internet, micro-controllers, 3D printing equipment.</p>
+                            </div>
+                        </div>
+
+                        <div class="rounded-xl overflow-hidden group border border-gray-100 shadow-sm">
+                            <div class="h-44 overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" alt="Science Lab">
+                            </div>
+                            <div class="p-4">
+                                <h4 class="font-bold text-sm text-brand-darkBlue">Integrated Science Lab</h4>
+                                <p class="text-xs text-gray-500 mt-1">Fully equipped Physics, Chemistry, and Biology apparatus.</p>
+                            </div>
+                        </div>
+
+                        <div class="rounded-xl overflow-hidden group border border-gray-100 shadow-sm">
+                            <div class="h-44 overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover group-hover:scale-110 transition duration-500" alt="Library">
+                            </div>
+                            <div class="p-4">
+                                <h4 class="font-bold text-sm text-brand-darkBlue">Central School Library</h4>
+                                <p class="text-xs text-gray-500 mt-1">5,000+ academic volumes, digital journals, and quiet reading spaces.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 3: ACADEMICS VIEW ==================== -->
+        <section x-show="activeTab === 'academics'" x-transition:enter="transition ease-out duration-300 opacity-0 transform scale-98" class="py-12 bg-gray-50">
+            <div class="container mx-auto px-4 space-y-12">
+                <!-- Page Banner Header -->
+                <div class="bg-brand-darkBlue text-white rounded-3xl p-8 md:p-12 shadow-xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between">
+                    <div class="z-10 max-w-xl space-y-3">
+                        <span class="bg-brand-yellow text-brand-darkBlue font-extrabold px-3 py-1 rounded-full text-xs uppercase">Academic Programs</span>
+                        <h2 class="text-3xl md:text-5xl font-black">Curriculum & STEM Initiatives</h2>
+                        <p class="text-gray-300 text-sm md:text-base">Comprehensive schooling tailored from early childhood to matriculation standards.</p>
+                    </div>
+                    <i class="fas fa-laptop-code text-white/10 text-9xl absolute -right-6 -bottom-6 pointer-events-none"></i>
+                </div>
+
+                <!-- Curriculum Levels Section -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Pre-School -->
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col">
+                        <img src="https://images.unsplash.com/photo-1587654780291-39c9404d746b?auto=format&fit=crop&w=600&q=80" alt="Pre-School" class="h-48 w-full object-cover">
+                        <div class="p-6 flex-grow flex flex-col justify-between space-y-4">
+                            <div>
+                                <span class="text-xs font-bold text-amber-500 uppercase tracking-widest">Ages 3 - 5 Years</span>
+                                <h3 class="text-xl font-bold text-brand-darkBlue mt-1">Pre-School & Montessori</h3>
+                                <p class="text-xs text-gray-600 mt-2 leading-relaxed">Sensory-based learning, phonics, play-way arithmetic, and social skill development in a vibrant environment.</p>
+                                <ul class="text-xs text-gray-500 mt-3 space-y-1">
+                                    <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Play & Activity Corner</li>
+                                    <li><i class="fas fa-check-circle text-green-500 mr-2"></i> English & Urdu Phonics</li>
+                                    <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Motor Skills Enhancement</li>
+                                </ul>
+                            </div>
+                            <button @click="openSyllabusModal('Pre-School')" class="w-full bg-blue-50 text-brand-blue font-bold py-2 rounded-lg text-xs hover:bg-blue-100 transition">
+                                <i class="fas fa-download mr-1"></i> Download Syllabus PDF
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Primary & Elementary -->
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col">
+                        <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=600&q=80" alt="Primary" class="h-48 w-full object-cover">
+                        <div class="p-6 flex-grow flex flex-col justify-between space-y-4">
+                            <div>
+                                <span class="text-xs font-bold text-brand-blue uppercase tracking-widest">Grade 1 - 7</span>
+                                <h3 class="text-xl font-bold text-brand-darkBlue mt-1">Primary & Elementary</h3>
+                                <p class="text-xs text-gray-600 mt-2 leading-relaxed">Building core competencies in Science, Mathematics, English, Urdu, Islamiyat, and Computer Science.</p>
+                                <ul class="text-xs text-gray-500 mt-3 space-y-1">
+                                    <li><i class="fas fa-check-circle text-green-500 mr-2"></i> STEM Integrated Science</li>
+                                    <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Basic Computer Coding</li>
+                                    <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Public Speaking & Debates</li>
+                                </ul>
+                            </div>
+                            <button @click="openSyllabusModal('Primary')" class="w-full bg-blue-50 text-brand-blue font-bold py-2 rounded-lg text-xs hover:bg-blue-100 transition">
+                                <i class="fas fa-download mr-1"></i> Download Syllabus PDF
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Secondary Board Stream -->
+                    <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col">
+                        <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=600&q=80" alt="Secondary" class="h-48 w-full object-cover">
+                        <div class="p-6 flex-grow flex flex-col justify-between space-y-4">
+                            <div>
+                                <span class="text-xs font-bold text-emerald-600 uppercase tracking-widest">Grade 8 - 10 (Matric)</span>
+                                <h3 class="text-xl font-bold text-brand-darkBlue mt-1">Secondary Board Section</h3>
+                                <p class="text-xs text-gray-600 mt-2 leading-relaxed">Rigorous preparation for BISE Lahore Board examinations with special focus on Bio-Science & Computer Science streams.</p>
+                                <ul class="text-xs text-gray-500 mt-3 space-y-1">
+                                    <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Physics, Chemistry, Biology</li>
+                                    <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Advanced Computer Science</li>
+                                    <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Regular Test Series & Mock Exams</li>
+                                </ul>
+                            </div>
+                            <button @click="openSyllabusModal('Secondary')" class="w-full bg-blue-50 text-brand-blue font-bold py-2 rounded-lg text-xs hover:bg-blue-100 transition">
+                                <i class="fas fa-download mr-1"></i> Download Syllabus PDF
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Innovative Initiatives Showcase -->
+                <div class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-gray-100 space-y-6">
+                    <div class="text-center max-w-xl mx-auto">
+                        <span class="text-brand-blue font-bold text-xs uppercase tracking-widest bg-blue-100 px-3 py-1 rounded-full">21st Century Skills</span>
+                        <h3 class="text-2xl font-bold text-brand-darkBlue mt-2">Innovative Academic Initiatives</h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="p-5 rounded-xl bg-gray-50 border border-gray-200 text-center hover:border-brand-blue transition">
+                            <div class="w-14 h-14 bg-blue-100 text-brand-blue rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">
+                                <i class="fas fa-project-diagram"></i>
+                            </div>
+                            <h4 class="font-bold text-brand-darkBlue text-sm mb-1">Project Based Learning</h4>
+                            <p class="text-xs text-gray-500 mb-3">Students build real-world models to solve community and scientific problems.</p>
+                            <button @click="showInitiativeDemo('PBL')" class="text-brand-blue font-bold text-xs hover:underline">Launch Interactive Demo &rarr;</button>
+                        </div>
+
+                        <div class="p-5 rounded-xl bg-gray-50 border border-gray-200 text-center hover:border-brand-blue transition">
+                            <div class="w-14 h-14 bg-amber-100 text-brand-yellow rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <h4 class="font-bold text-brand-darkBlue text-sm mb-1">Robotics & AI Lab</h4>
+                            <p class="text-xs text-gray-500 mb-3">Programming sensors, line-follower bots, and simple automation logic.</p>
+                            <button @click="showInitiativeDemo('Robotics')" class="text-brand-blue font-bold text-xs hover:underline">Try Simulator &rarr;</button>
+                        </div>
+
+                        <div class="p-5 rounded-xl bg-gray-50 border border-gray-200 text-center hover:border-brand-blue transition">
+                            <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">
+                                <i class="fas fa-laptop-code"></i>
+                            </div>
+                            <h4 class="font-bold text-brand-darkBlue text-sm mb-1">eLearning Portal</h4>
+                            <p class="text-xs text-gray-500 mb-3">Digital lecture notes, practice quizzes, and online video revisions.</p>
+                            <button @click="showInitiativeDemo('eLearning')" class="text-brand-blue font-bold text-xs hover:underline">Preview Quiz System &rarr;</button>
+                        </div>
+
+                        <div class="p-5 rounded-xl bg-gray-50 border border-gray-200 text-center hover:border-brand-blue transition">
+                            <div class="w-14 h-14 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">
+                                <i class="fas fa-microscope"></i>
+                            </div>
+                            <h4 class="font-bold text-brand-darkBlue text-sm mb-1">Activity STEM Labs</h4>
+                            <p class="text-xs text-gray-500 mb-3">Hands-on chemistry, circuit assembly, and ecological experiments.</p>
+                            <button @click="showInitiativeDemo('STEM')" class="text-brand-blue font-bold text-xs hover:underline">Explore Modules &rarr;</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 4: ADMISSIONS VIEW ==================== -->
+        <section x-show="activeTab === 'admissions'" x-transition:enter="transition ease-out duration-300 opacity-0 transform scale-98" class="py-12 bg-gray-50">
+            <div class="container mx-auto px-4 space-y-12">
+                <!-- Banner Header -->
+                <div class="bg-brand-blue text-white rounded-3xl p-8 md:p-12 shadow-xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between">
+                    <div class="z-10 max-w-xl space-y-3">
+                        <span class="bg-brand-yellow text-brand-darkBlue font-extrabold px-3 py-1 rounded-full text-xs uppercase">Session 2026 - 2027</span>
+                        <h2 class="text-3xl md:text-5xl font-black">Online Admission Portal</h2>
+                        <p class="text-blue-100 text-sm md:text-base">Join the Gateway family. Fill out the application form below for instant registration.</p>
+                    </div>
+                    <i class="fas fa-file-signature text-white/10 text-9xl absolute -right-6 -bottom-6 pointer-events-none"></i>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Left Column: Fee Calculator & Checklist -->
+                    <div class="space-y-6">
+                        <!-- Dynamic Fee Estimator Widget -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-4">
+                            <h3 class="text-lg font-bold text-brand-darkBlue flex items-center">
+                                <i class="fas fa-calculator text-brand-yellow mr-2"></i> Fee Structure Calculator
+                            </h3>
+                            <p class="text-xs text-gray-500">Select grade level to view approximate fee breakdown:</p>
+                            
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-700 mb-1">Select Grade</label>
+                                <select x-model="selectedFeeGrade" @change="calculateFee()" class="w-full p-2.5 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-blue outline-none">
+                                    <option value="preschool">Pre-School (Nursery/Prep)</option>
+                                    <option value="primary">Primary (Grade 1 - 5)</option>
+                                    <option value="elementary">Elementary (Grade 6 - 8)</option>
+                                    <option value="secondary">Secondary (Matric 9 - 10)</option>
+                                </select>
+                            </div>
+
+                            <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 space-y-2 text-xs">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Admission Fee (One-time):</span>
+                                    <span class="font-bold text-brand-darkBlue" x-text="'PKR ' + feeBreakdown.admission"></span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Monthly Tuition Fee:</span>
+                                    <span class="font-bold text-brand-darkBlue" x-text="'PKR ' + feeBreakdown.monthly"></span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Annual Fund & Lab Charges:</span>
+                                    <span class="font-bold text-brand-darkBlue" x-text="'PKR ' + feeBreakdown.annual"></span>
+                                </div>
+                                <hr class="border-gray-200 my-1">
+                                <div class="flex justify-between text-sm font-extrabold text-brand-blue">
+                                    <span>First Month Payable:</span>
+                                    <span x-text="'PKR ' + (feeBreakdown.admission + feeBreakdown.monthly + feeBreakdown.annual)"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Documents Checklist -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-3">
+                            <h3 class="text-lg font-bold text-brand-darkBlue flex items-center">
+                                <i class="fas fa-clipboard-check text-brand-blue mr-2"></i> Required Documents
+                            </h3>
+                            <ul class="text-xs text-gray-600 space-y-2">
+                                <li class="flex items-start"><i class="fas fa-check text-green-500 mt-0.5 mr-2"></i> 2 Recent Passport Size Photographs</li>
+                                <li class="flex items-start"><i class="fas fa-check text-green-500 mt-0.5 mr-2"></i> Copy of B-Form / Birth Certificate</li>
+                                <li class="flex items-start"><i class="fas fa-check text-green-500 mt-0.5 mr-2"></i> Father / Guardian CNIC Copy</li>
+                                <li class="flex items-start"><i class="fas fa-check text-green-500 mt-0.5 mr-2"></i> Previous School Leaving Certificate</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Interactive Admission Form -->
+                    <div class="lg:col-span-2 bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100">
+                        <div class="mb-6 flex items-center justify-between">
+                            <div>
+                                <h3 class="text-2xl font-bold text-brand-darkBlue">Admission Application Form</h3>
+                                <p class="text-xs text-gray-500">Step <span x-text="admissionStep"></span> of 2: Application Details</p>
+                            </div>
+                            <div class="flex space-x-2">
+                                <span :class="admissionStep === 1 ? 'bg-brand-blue text-white' : 'bg-gray-200 text-gray-600'" class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs">1</span>
+                                <span :class="admissionStep === 2 ? 'bg-brand-blue text-white' : 'bg-gray-200 text-gray-600'" class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs">2</span>
+                            </div>
+                        </div>
+
+                        <form @submit.prevent="submitAdmissionForm()">
+                            <!-- STEP 1: Student Information -->
+                            <div x-show="admissionStep === 1" class="space-y-4">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-semibold text-gray-700 mb-1">Student Full Name *</label>
+                                        <input type="text" x-model="admissionForm.studentName" required placeholder="e.g. Ali Ahmed" class="w-full p-2.5 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-blue outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-gray-700 mb-1">Father / Guardian Name *</label>
+                                        <input type="text" x-model="admissionForm.fatherName" required placeholder="e.g. Ahmed Khan" class="w-full p-2.5 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-blue outline-none">
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-semibold text-gray-700 mb-1">Date of Birth *</label>
+                                        <input type="date" x-model="admissionForm.dob" required class="w-full p-2.5 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-blue outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-gray-700 mb-1">Gender *</label>
+                                        <select x-model="admissionForm.gender" required class="w-full p-2.5 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-blue outline-none">
+                                            <option value="">Select Gender</option>
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-gray-700 mb-1">Grade Applying For *</label>
+                                        <select x-model="admissionForm.grade" required class="w-full p-2.5 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-blue outline-none">
+                                            <option value="">Select Grade</option>
+                                            <option value="Nursery">Nursery / Playgroup</option>
+                                            <option value="Prep">Prep</option>
+                                            <option value="Class 1-5">Primary (1 - 5)</option>
+                                            <option value="Class 6-8">Elementary (6 - 8)</option>
+                                            <option value="Class 9 Science">Class 9 Bio-Science</option>
+                                            <option value="Class 9 Computer">Class 9 Computer Science</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="pt-4 flex justify-end">
+                                    <button type="button" @click="if(validateStep1()) admissionStep = 2" class="bg-brand-blue text-white font-bold px-6 py-2.5 rounded-lg hover:bg-blue-800 transition text-xs">
+                                        Next Step &rarr;
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- STEP 2: Contact & Documents -->
+                            <div x-show="admissionStep === 2" class="space-y-4">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-semibold text-gray-700 mb-1">Mobile / WhatsApp Number *</label>
+                                        <input type="tel" x-model="admissionForm.phone" required placeholder="+92 300 0000000" class="w-full p-2.5 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-blue outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-gray-700 mb-1">Email Address</label>
+                                        <input type="email" x-model="admissionForm.email" placeholder="parent@example.com" class="w-full p-2.5 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-blue outline-none">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-700 mb-1">Residential Address (Lahore Area) *</label>
+                                    <textarea x-model="admissionForm.address" required rows="3" placeholder="Street, Main Bazar, Rehman Pura, Lahore" class="w-full p-2.5 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-blue outline-none"></textarea>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-700 mb-1">Previous School Name (If applicable)</label>
+                                    <input type="text" x-model="admissionForm.prevSchool" placeholder="Name of previous school" class="w-full p-2.5 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-blue outline-none">
+                                </div>
+
+                                <div class="pt-4 flex justify-between items-center">
+                                    <button type="button" @click="admissionStep = 1" class="bg-gray-200 text-gray-700 font-bold px-5 py-2.5 rounded-lg hover:bg-gray-300 transition text-xs">
+                                        &larr; Back
+                                    </button>
+                                    <button type="submit" class="bg-brand-yellow text-brand-darkBlue font-extrabold px-8 py-2.5 rounded-lg hover:bg-amber-400 transition text-xs shadow-md">
+                                        Submit Application <i class="fas fa-check ml-1"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 5: CALENDAR & EVENTS VIEW ==================== -->
+        <section x-show="activeTab === 'calendar'" x-transition:enter="transition ease-out duration-300 opacity-0 transform scale-98" class="py-12 bg-gray-50">
+            <div class="container mx-auto px-4 space-y-8">
+                <div class="bg-brand-blue text-white rounded-3xl p-8 shadow-xl flex flex-col md:flex-row items-center justify-between">
+                    <div>
+                        <span class="bg-brand-yellow text-brand-darkBlue font-extrabold px-3 py-1 rounded-full text-xs uppercase">Academic Year 2026</span>
+                        <h2 class="text-3xl font-black mt-2">School Calendar & Events</h2>
+                        <p class="text-blue-100 text-xs md:text-sm mt-1">Keep track of examinations, holidays, sports competitions, and parent teacher meetings.</p>
+                    </div>
+                    <div class="mt-4 md:mt-0 flex space-x-2">
+                        <button @click="calendarFilter = 'all'" :class="calendarFilter === 'all' ? 'bg-brand-yellow text-brand-darkBlue font-bold' : 'bg-blue-800 text-white'" class="px-3 py-1.5 rounded-lg text-xs">All Events</button>
+                        <button @click="calendarFilter = 'exam'" :class="calendarFilter === 'exam' ? 'bg-brand-yellow text-brand-darkBlue font-bold' : 'bg-blue-800 text-white'" class="px-3 py-1.5 rounded-lg text-xs">Exams</button>
+                        <button @click="calendarFilter = 'holiday'" :class="calendarFilter === 'holiday' ? 'bg-brand-yellow text-brand-darkBlue font-bold' : 'bg-blue-800 text-white'" class="px-3 py-1.5 rounded-lg text-xs">Holidays</button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <template x-for="event in filteredEvents" :key="event.id">
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between hover:shadow-md transition">
+                            <div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <span :class="{
+                                        'bg-blue-100 text-brand-blue': event.type === 'exam',
+                                        'bg-rose-100 text-rose-600': event.type === 'holiday',
+                                        'bg-emerald-100 text-emerald-600': event.type === 'event'
+                                    }" class="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase" x-text="event.type"></span>
+                                    <span class="text-xs text-gray-400 font-semibold" x-text="event.date"></span>
+                                </div>
+                                <h3 class="font-bold text-base text-brand-darkBlue" x-text="event.title"></h3>
+                                <p class="text-xs text-gray-600 mt-2 leading-relaxed" x-text="event.description"></p>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-gray-100 flex justify-between items-center text-xs text-gray-500">
+                                <span><i class="fas fa-map-marker-alt text-brand-yellow mr-1"></i> <span x-text="event.location"></span></span>
+                                <button @click="openEventModal(event)" class="text-brand-blue font-bold hover:underline">Details &rarr;</button>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 6: PORTALS VIEW ==================== -->
+        <section x-show="activeTab === 'portal'" x-transition:enter="transition ease-out duration-300 opacity-0 transform scale-98" class="py-12 bg-gray-50">
+            <div class="container mx-auto px-4 space-y-8">
+                <!-- Role Selector Header -->
+                <div class="text-center max-w-xl mx-auto space-y-3">
+                    <span class="bg-brand-yellow text-brand-darkBlue font-bold text-xs uppercase px-3 py-1 rounded-full">Simulator Portal</span>
+                    <h2 class="text-3xl font-extrabold text-brand-darkBlue">Gateway Campus Portal</h2>
+                    <p class="text-xs text-gray-500">Select a portal persona to simulate live dashboard view</p>
+                    
+                    <div class="inline-flex bg-white p-1.5 rounded-xl shadow-sm border border-gray-200 space-x-2 mt-4">
+                        <button @click="portalRole = 'student'" :class="portalRole === 'student' ? 'bg-brand-blue text-white font-bold' : 'text-gray-600'" class="px-4 py-2 rounded-lg text-xs transition">
+                            <i class="fas fa-user-graduate mr-1"></i> Student
+                        </button>
+                        <button @click="portalRole = 'parent'" :class="portalRole === 'parent' ? 'bg-brand-blue text-white font-bold' : 'text-gray-600'" class="px-4 py-2 rounded-lg text-xs transition">
+                            <i class="fas fa-users mr-1"></i> Parent
+                        </button>
+                        <button @click="portalRole = 'teacher'" :class="portalRole === 'teacher' ? 'bg-brand-blue text-white font-bold' : 'text-gray-600'" class="px-4 py-2 rounded-lg text-xs transition">
+                            <i class="fas fa-chalkboard-teacher mr-1"></i> Teacher
+                        </button>
+                    </div>
+                </div>
+
+                <!-- STUDENT PORTAL DASHBOARD -->
+                <div x-show="portalRole === 'student'" class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between border-b pb-4 gap-4">
+                        <div class="flex items-center space-x-4">
+                            <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=120&q=80" alt="Student" class="w-14 h-14 rounded-full object-cover shadow">
+                            <div>
+                                <h3 class="text-lg font-bold text-brand-darkBlue">Hamza Shahzad</h3>
+                                <p class="text-xs text-gray-500">Roll No: 2026-CS-89 | Grade 9 (Computer Science)</p>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2 text-xs">
+                            <span class="bg-green-100 text-green-700 font-bold px-3 py-1.5 rounded-lg"><i class="fas fa-check-circle mr-1"></i> Attendance: 96%</span>
+                            <span class="bg-blue-100 text-brand-blue font-bold px-3 py-1.5 rounded-lg"><i class="fas fa-star mr-1"></i> GPA: 3.9 / 4.0</span>
+                        </div>
+                    </div>
+
+                    <!-- Student Grades Table -->
+                    <div>
+                        <h4 class="font-bold text-brand-darkBlue text-sm mb-3">Mid-Term Assessment Grades</h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs border-collapse">
+                                <thead>
+                                    <tr class="bg-gray-50 text-gray-600 border-b">
+                                        <th class="p-3">Subject</th>
+                                        <th class="p-3">Teacher</th>
+                                        <th class="p-3">Marks Obtained</th>
+                                        <th class="p-3">Grade</th>
+                                        <th class="p-3">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y text-gray-700">
+                                    <tr>
+                                        <td class="p-3 font-semibold">Computer Science</td>
+                                        <td class="p-3">Sir Usman Rafi</td>
+                                        <td class="p-3">72 / 75</td>
+                                        <td class="p-3 font-bold text-green-600">A+</td>
+                                        <td class="p-3"><span class="bg-green-100 text-green-800 text-[10px] px-2 py-0.5 rounded">Passed</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-semibold">Mathematics</td>
+                                        <td class="p-3">Prof. M. Akram</td>
+                                        <td class="p-3">68 / 75</td>
+                                        <td class="p-3 font-bold text-green-600">A+</td>
+                                        <td class="p-3"><span class="bg-green-100 text-green-800 text-[10px] px-2 py-0.5 rounded">Passed</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="p-3 font-semibold">Physics Lab</td>
+                                        <td class="p-3">Ms. Sadia Bilal</td>
+                                        <td class="p-3">28 / 30</td>
+                                        <td class="p-3 font-bold text-green-600">A</td>
+                                        <td class="p-3"><span class="bg-green-100 text-green-800 text-[10px] px-2 py-0.5 rounded">Passed</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PARENT PORTAL DASHBOARD -->
+                <div x-show="portalRole === 'parent'" class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between border-b pb-4 gap-4">
+                        <div>
+                            <h3 class="text-lg font-bold text-brand-darkBlue">Parent Guardian Dashboard</h3>
+                            <p class="text-xs text-gray-500">Child Enrolled: Hamza Shahzad & Zoya Shahzad</p>
+                        </div>
+                        <button @click="showToast('Fee receipt generated & downloaded', 'success')" class="bg-brand-blue text-white font-bold px-4 py-2 rounded-lg text-xs hover:bg-blue-800 transition">
+                            <i class="fas fa-file-invoice-dollar mr-1"></i> Download Paid Voucher
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="p-4 bg-gray-50 rounded-xl border border-gray-200">
+                            <h4 class="font-bold text-xs uppercase text-gray-500 mb-2">October 2026 Fee Status</h4>
+                            <div class="flex items-center justify-between">
+                                <span class="text-xl font-bold text-emerald-600"><i class="fas fa-check-circle mr-1"></i> PAID</span>
+                                <span class="text-xs text-gray-500">Challan # GPHS-88421</span>
+                            </div>
+                        </div>
+
+                        <div class="p-4 bg-gray-50 rounded-xl border border-gray-200">
+                            <h4 class="font-bold text-xs uppercase text-gray-500 mb-2">Upcoming PTM Meeting</h4>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm font-bold text-brand-darkBlue">Saturday, Oct 25, 2026</span>
+                                <span class="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded">Slot 10:30 AM</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TEACHER PORTAL DASHBOARD -->
+                <div x-show="portalRole === 'teacher'" class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between border-b pb-4 gap-4">
+                        <div>
+                            <h3 class="text-lg font-bold text-brand-darkBlue">Teacher Portal - Sir Usman Rafi</h3>
+                            <p class="text-xs text-gray-500">Senior Computer Science Faculty</p>
+                        </div>
+                        <button @click="showToast('Class assignment posted successfully!', 'success')" class="bg-brand-yellow text-brand-darkBlue font-bold px-4 py-2 rounded-lg text-xs hover:bg-amber-400 transition">
+                            <i class="fas fa-plus-circle mr-1"></i> Upload New Assignment
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                        <div class="p-4 bg-blue-50 rounded-xl">
+                            <span class="text-gray-500 font-semibold">Class 9-A Assignment</span>
+                            <h5 class="font-bold text-brand-darkBlue mt-1">Python Loops Practice</h5>
+                            <span class="text-[10px] text-green-600 font-bold">28 / 30 Submitted</span>
+                        </div>
+                        <div class="p-4 bg-amber-50 rounded-xl">
+                            <span class="text-gray-500 font-semibold">Class 10-B Practical</span>
+                            <h5 class="font-bold text-brand-darkBlue mt-1">HTML Web Page Design</h5>
+                            <span class="text-[10px] text-amber-600 font-bold">Pending Evaluation</span>
+                        </div>
+                        <div class="p-4 bg-emerald-50 rounded-xl">
+                            <span class="text-gray-500 font-semibold">Class Attendance</span>
+                            <h5 class="font-bold text-brand-darkBlue mt-1">Mark Today's Attendance</h5>
+                            <span class="text-[10px] text-emerald-700 font-bold">Completed</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 7: DOWNLOADS & RESOURCES VIEW ==================== -->
+        <section x-show="activeTab === 'downloads'" x-transition:enter="transition ease-out duration-300 opacity-0 transform scale-98" class="py-12 bg-gray-50">
+            <div class="container mx-auto px-4 space-y-8">
+                <div class="bg-brand-blue text-white rounded-3xl p-8 shadow-xl flex flex-col md:flex-row items-center justify-between">
+                    <div>
+                        <span class="bg-brand-yellow text-brand-darkBlue font-extrabold px-3 py-1 rounded-full text-xs uppercase">Resource Center</span>
+                        <h2 class="text-3xl font-black mt-2">Downloads & Question Papers</h2>
+                        <p class="text-blue-100 text-xs md:text-sm mt-1">Access date sheets, sample papers, syllabus booklets, and school forms.</p>
+                    </div>
+                    <div class="mt-4 md:mt-0">
+                        <input type="text" x-model="downloadSearch" placeholder="Search document..." class="px-4 py-2 text-xs text-gray-800 rounded-lg outline-none w-60">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <template x-for="doc in filteredDownloads" :key="doc.id">
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-start space-x-4 hover:shadow-md transition">
+                            <div class="w-12 h-12 bg-red-100 text-red-600 rounded-xl flex items-center justify-center flex-shrink-0 text-xl">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <div class="flex-grow space-y-1">
+                                <span class="text-[10px] font-bold text-brand-blue uppercase" x-text="doc.category"></span>
+                                <h4 class="font-bold text-sm text-brand-darkBlue" x-text="doc.title"></h4>
+                                <p class="text-[11px] text-gray-500" x-text="doc.size + ' • Updated ' + doc.date"></p>
+                                <button @click="triggerDownload(doc.title)" class="mt-2 text-xs font-bold text-brand-blue hover:underline inline-flex items-center">
+                                    <i class="fas fa-download mr-1"></i> Download File
+                                </button>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== TAB 8: CONTACT US VIEW ==================== -->
+        <section x-show="activeTab === 'contact'" x-transition:enter="transition ease-out duration-300 opacity-0 transform scale-98" class="py-12 bg-gray-50">
+            <div class="container mx-auto px-4 space-y-12">
+                <div class="bg-brand-darkBlue text-white rounded-3xl p-8 shadow-xl flex flex-col md:flex-row items-center justify-between">
+                    <div>
+                        <span class="bg-brand-yellow text-brand-darkBlue font-extrabold px-3 py-1 rounded-full text-xs uppercase">Get In Touch</span>
+                        <h2 class="text-3xl font-black mt-2">Contact Gateway School</h2>
+                        <p class="text-gray-300 text-xs md:text-sm mt-1">We are happy to answer your queries regarding admissions, visits, or academic details.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Contact Information & Map -->
+                    <div class="space-y-6">
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-4">
+                            <h3 class="text-xl font-bold text-brand-darkBlue">Campus Information</h3>
+                            
+                            <div class="space-y-3 text-xs md:text-sm">
+                                <div class="flex items-start space-x-3">
+                                    <i class="fas fa-map-marker-alt text-brand-yellow text-lg mt-1"></i>
+                                    <div>
+                                        <h5 class="font-bold text-brand-darkBlue">Address</h5>
+                                        <p class="text-gray-600">Gateway Public High School, Main Bazar Rehman Pura, Lahore, Punjab, Pakistan</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-start space-x-3">
+                                    <i class="fas fa-phone-alt text-brand-yellow text-lg mt-1"></i>
+                                    <div>
+                                        <h5 class="font-bold text-brand-darkBlue">Phone Numbers</h5>
+                                        <p class="text-gray-600">+92 370-7652226 | +92 300-4272373 | +92 300-7995900</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-start space-x-3">
+                                    <i class="fas fa-envelope text-brand-yellow text-lg mt-1"></i>
+                                    <div>
+                                        <h5 class="font-bold text-brand-darkBlue">Email Address</h5>
+                                        <p class="text-gray-600">info@gatewaypublic.edu.pk</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-start space-x-3">
+                                    <i class="fas fa-clock text-brand-yellow text-lg mt-1"></i>
+                                    <div>
+                                        <h5 class="font-bold text-brand-darkBlue">Office Timings</h5>
+                                        <p class="text-gray-600">Monday – Saturday: 7:30 AM – 2:00 PM</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Embedded Visual Map Placeholder Representation -->
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
+                            <h4 class="font-bold text-xs uppercase text-gray-500 mb-2">Location Map (Rehman Pura, Lahore)</h4>
+                            <div class="w-full h-52 rounded-xl bg-gray-200 overflow-hidden relative flex items-center justify-center text-center p-4">
+                                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3401.442385150821!2d74.3160!3d31.5204!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzHCsDMxJzEzLjQiTiA3NMKwMTgnNTcuNiJF!5e0!3m2!1sen!2spk!4v1620000000000!5m2!1sen!2spk" class="w-full h-full border-0 rounded-lg" allowfullscreen="" loading="lazy"></iframe>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Form -->
+                    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100">
+                        <h3 class="text-2xl font-bold text-brand-darkBlue mb-4">Send Us a Message</h3>
+                        <form @submit.prevent="submitContactForm()" class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-700 mb-1">Your Full Name *</label>
+                                <input type="text" x-model="contactForm.name" required placeholder="John Doe" class="w-full p-2.5 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-blue outline-none">
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-700 mb-1">Phone Number *</label>
+                                    <input type="tel" x-model="contactForm.phone" required placeholder="+92 300 1234567" class="w-full p-2.5 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-blue outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-700 mb-1">Email Address</label>
+                                    <input type="email" x-model="contactForm.email" placeholder="email@example.com" class="w-full p-2.5 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-blue outline-none">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-700 mb-1">Subject</label>
+                                <select x-model="contactForm.subject" class="w-full p-2.5 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-blue outline-none">
+                                    <option value="General Query">General Admission Inquiry</option>
+                                    <option value="Fee Query">Fee Structure Question</option>
+                                    <option value="Feedback">Campus Tour Request</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-700 mb-1">Your Message *</label>
+                                <textarea x-model="contactForm.message" required rows="4" placeholder="Write your query here..." class="w-full p-2.5 border border-gray-300 rounded-lg text-xs focus:ring-2 focus:ring-brand-blue outline-none"></textarea>
+                            </div>
+
+                            <button type="submit" class="w-full bg-brand-blue text-white font-bold py-3 rounded-lg hover:bg-blue-800 transition text-xs shadow-md">
+                                <i class="fas fa-paper-plane mr-1"></i> Submit Message
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Interactive Demo & Syllabus Download Modal -->
+    <div x-show="modal.open" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" x-transition>
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl relative space-y-4">
+            <button @click="modal.open = false" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full bg-blue-100 text-brand-blue flex items-center justify-center text-lg font-bold">
+                    <i :class="modal.icon"></i>
+                </div>
+                <h3 class="text-xl font-bold text-brand-darkBlue" x-text="modal.title"></h3>
+            </div>
+
+            <div class="text-xs md:text-sm text-gray-600 space-y-2" x-html="modal.content"></div>
+
+            <div class="pt-4 flex justify-end space-x-2 border-t">
+                <button @click="modal.open = false" class="bg-gray-200 text-gray-700 font-bold px-4 py-2 rounded-lg text-xs">Close</button>
+                <button x-show="modal.actionText" @click="executeModalAction()" class="bg-brand-blue text-white font-bold px-4 py-2 rounded-lg text-xs" x-text="modal.actionText"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comprehensive Footer -->
+    <footer class="bg-brand-darkBlue text-gray-300 py-12 border-t-4 border-brand-yellow mt-12">
+        <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="space-y-4">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-brand-yellow text-brand-darkBlue w-10 h-10 rounded-lg flex items-center justify-center font-bold text-xl">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div>
+                        <span class="text-lg font-extrabold text-white block uppercase leading-tight">Gateway Public</span>
+                        <span class="text-xs text-brand-yellow font-semibold tracking-wider uppercase block">High School</span>
+                    </div>
+                </div>
+                <p class="text-xs leading-relaxed text-gray-400">
+                    To prepare students with the promise of enhancing their intellectual, physical, social, emotional, and technological growth.
+                </p>
+            </div>
+
+            <div>
+                <h4 class="text-white text-sm font-bold mb-4 uppercase tracking-wider">Quick Navigation</h4>
+                <ul class="space-y-2 text-xs">
+                    <li><a href="javascript:void(0)" @click="setActiveTab('home')" class="hover:text-brand-yellow transition">Home</a></li>
+                    <li><a href="javascript:void(0)" @click="setActiveTab('about')" class="hover:text-brand-yellow transition">About Gateway</a></li>
+                    <li><a href="javascript:void(0)" @click="setActiveTab('academics')" class="hover:text-brand-yellow transition">Academic Curriculum</a></li>
+                    <li><a href="javascript:void(0)" @click="setActiveTab('admissions')" class="hover:text-brand-yellow transition">Online Admissions</a></li>
+                    <li><a href="javascript:void(0)" @click="setActiveTab('downloads')" class="hover:text-brand-yellow transition">Downloads & Papers</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-white text-sm font-bold mb-4 uppercase tracking-wider">Contact Info</h4>
+                <ul class="space-y-2 text-xs text-gray-400">
+                    <li><i class="fas fa-map-marker-alt text-brand-yellow mr-2"></i> Main Bazar Rehman Pura, Lahore</li>
+                    <li><i class="fas fa-phone mr-2 text-brand-yellow"></i> +92 370-7652226</li>
+                    <li><i class="fas fa-phone mr-2 text-brand-yellow"></i> +92 300-4272373</li>
+                    <li><i class="fas fa-envelope mr-2 text-brand-yellow"></i> info@gatewaypublic.edu.pk</li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-white text-sm font-bold mb-4 uppercase tracking-wider">Newsletter</h4>
+                <p class="text-xs text-gray-400 mb-3">Subscribe to get academic updates and exam notifications.</p>
+                <form @submit.prevent="showToast('Subscribed to newsletter!', 'success')" class="flex">
+                    <input type="email" placeholder="Your Email" required class="px-3 py-2 w-full text-xs rounded-l-lg text-gray-800 outline-none">
+                    <button type="submit" class="bg-brand-yellow text-brand-darkBlue font-bold px-3 rounded-r-lg hover:bg-amber-400 text-xs">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="container mx-auto px-4 mt-12 pt-6 border-t border-gray-800 text-xs text-center text-gray-500 flex flex-col sm:flex-row justify-between items-center">
+            <p>&copy; 2026 Gateway Public High School Lahore. All Rights Reserved.</p>
+            <p class="mt-2 sm:mt-0">Designed & Developed for Modern Learning Excellence.</p>
+        </div>
+    </footer>
+
+    <script>
+        function schoolApp() {
+            return {
+                activeTab: 'home',
+                mobileMenuOpen: false,
+                toasts: [],
+                toastCount: 0,
+
+                // Navigation Tabs Config
+                navTabs: [
+                    { id: 'home', label: 'Home', icon: 'fas fa-home' },
+                    { id: 'about', label: 'About Us', icon: 'fas fa-info-circle' },
+                    { id: 'academics', label: 'Academics', icon: 'fas fa-book' },
+                    { id: 'admissions', label: 'Admissions', icon: 'fas fa-user-plus' },
+                    { id: 'calendar', label: 'Calendar', icon: 'far fa-calendar-alt' },
+                    { id: 'downloads', label: 'Downloads', icon: 'fas fa-download' },
+                    { id: 'contact', label: 'Contact', icon: 'fas fa-envelope' }
+                ],
+
+                // Statistics counters
+                stats: {
+                    students: 1250,
+                    teachers: 68,
+                    passRate: 99,
+                    years: 25
+                },
+
+                // Faculty Directory Search State
+                facultySearch: '',
+                facultyDepartment: 'All',
+                facultyList: [
+                    { id: 1, name: 'Prof. M. Akram Malik', role: 'Principal & Physics', dept: 'Science', qualification: 'M.Sc. Physics (PU)', image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=150&q=80' },
+                    { id: 2, name: 'Sir Usman Rafi', role: 'Head of Computer & AI', dept: 'Computer', qualification: 'BS CS (FAST Lahore)', image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80' },
+                    { id: 3, name: 'Ms. Sadia Bilal', role: 'Senior Chemistry Specialist', dept: 'Science', qualification: 'M.Phil Chemistry', image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=150&q=80' },
+                    { id: 4, name: 'Qari Hafiz Tanveer', role: 'Islamiyat & Quranic Studies', dept: 'Languages', qualification: 'M.A. Islamic Studies', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80' }
+                ],
+
+                get filteredFaculty() {
+                    return this.facultyList.filter(f => {
+                        const matchDept = this.facultyDepartment === 'All' || f.dept === this.facultyDepartment;
+                        const matchQuery = f.name.toLowerCase().includes(this.facultySearch.toLowerCase()) || 
+                                           f.role.toLowerCase().includes(this.facultySearch.toLowerCase());
+                        return matchDept && matchQuery;
+                    });
+                },
+
+                // Admissions Calculator & Step Form State
+                selectedFeeGrade: 'preschool',
+                feeBreakdown: { admission: 5000, monthly: 3500, annual: 2000 },
+                admissionStep: 1,
+                admissionForm: {
+                    studentName: '', fatherName: '', dob: '', gender: '', grade: '',
+                    phone: '', email: '', address: '', prevSchool: ''
+                },
+
+                calculateFee() {
+                    const grade = this.selectedFeeGrade;
+                    if (grade === 'preschool') this.feeBreakdown = { admission: 5000, monthly: 3500, annual: 2000 };
+                    else if (grade === 'primary') this.feeBreakdown = { admission: 6000, monthly: 4200, annual: 2500 };
+                    else if (grade === 'elementary') this.feeBreakdown = { admission: 7000, monthly: 4800, annual: 3000 };
+                    else if (grade === 'secondary') this.feeBreakdown = { admission: 8000, monthly: 5500, annual: 3500 };
+                },
+
+                validateStep1() {
+                    if (!this.admissionForm.studentName || !this.admissionForm.fatherName || !this.admissionForm.dob || !this.admissionForm.gender || !this.admissionForm.grade) {
+                        this.showToast('Please fill out all required step 1 fields', 'warning');
+                        return false;
+                    }
+                    return true;
+                },
+
+                submitAdmissionForm() {
+                    this.showToast('Application Submitted! Reference #: GPHS-2026-' + Math.floor(1000 + Math.random() * 9000), 'success');
+                    this.admissionStep = 1;
+                    this.admissionForm = { studentName: '', fatherName: '', dob: '', gender: '', grade: '', phone: '', email: '', address: '', prevSchool: '' };
+                },
+
+                // Calendar Events Data
+                calendarFilter: 'all',
+                events: [
+                    { id: 1, title: 'Mid-Term Examinations 2026', date: 'Oct 18 - Oct 28, 2026', type: 'exam', location: 'Examination Halls', description: 'Comprehensive term assessments for Grade 1 through Grade 10.' },
+                    { id: 2, title: 'Iqbal Day Holiday', date: 'Nov 09, 2026', type: 'holiday', location: 'School Closed', description: 'Official public holiday in commemoration of Allama Iqbal.' },
+                    { id: 3, title: 'Annual Science & STEM Fair', date: 'Nov 20, 2026', type: 'event', location: 'School Courtyard', description: 'Robotics exhibitions and student project demonstrations.' }
+                ],
+
+                get filteredEvents() {
+                    if (this.calendarFilter === 'all') return this.events;
+                    return this.events.filter(e => e.type === this.calendarFilter);
+                },
+
+                // Portal Role State
+                portalRole: 'student',
+
+                // Downloads Section Data
+                downloadSearch: '',
+                downloadsList: [
+                    { id: 1, title: 'Matric Date Sheet 2026 (BISE Lahore)', category: 'Exam Schedule', size: '1.2 MB', date: 'Oct 2026' },
+                    { id: 2, title: 'Grade 9 Computer Science Notes & Lab Manual', category: 'Syllabus', size: '4.5 MB', date: 'Sep 2026' },
+                    { id: 3, title: 'School Prospectus & Rules Booklet', category: 'General', size: '3.1 MB', date: 'Aug 2026' }
+                ],
+
+                get filteredDownloads() {
+                    return this.downloadsList.filter(d => d.title.toLowerCase().includes(this.downloadSearch.toLowerCase()));
+                },
+
+                triggerDownload(title) {
+                    this.showToast('Downloading ' + title, 'info');
+                },
+
+                // Contact Form State
+                contactForm: { name: '', phone: '', email: '', subject: 'General Query', message: '' },
+                submitContactForm() {
+                    this.showToast('Thank you! Your message has been sent to school office.', 'success');
+                    this.contactForm = { name: '', phone: '', email: '', subject: 'General Query', message: '' };
+                },
+
+                // Modal System State
+                modal: { open: false, title: '', icon: 'fas fa-info-circle', content: '', actionText: '', action: null },
+
+                openSyllabusModal(level) {
+                    this.modal = {
+                        open: true,
+                        title: level + ' Syllabus Download',
+                        icon: 'fas fa-file-pdf',
+                        content: `<p>Download the complete updated term syllabus for <strong>${level}</strong> including textbook lists and exam schedules.</p>`,
+                        actionText: 'Download Syllabus',
+                        action: () => this.showToast(level + ' syllabus PDF downloaded!', 'success')
+                    };
+                },
+
+                showInitiativeDemo(type) {
+                    let details = '';
+                    if (type === 'PBL') details = '<p>Project Based Learning engages students in hands-on real world problem solving, integrating Physics, Maths, and Art.</p>';
+                    else if (type === 'Robotics') details = '<p>Our STEM Robotics lab utilizes Arduino & Scratch programming to build autonomous vehicles.</p>';
+                    else details = '<p>eLearning portal offers 24/7 video tutorials and computerized self-assessment quizzes.</p>';
+
+                    this.modal = {
+                        open: true,
+                        title: type + ' Initiative Demo',
+                        icon: 'fas fa-laptop-code',
+                        content: details,
+                        actionText: 'Launch Interactive Module',
+                        action: () => this.showToast('Demo module launched successfully!', 'info')
+                    };
+                },
+
+                openEventModal(event) {
+                    this.modal = {
+                        open: true,
+                        title: event.title,
+                        icon: 'far fa-calendar-alt',
+                        content: `<p><strong>Date:</strong> ${event.date}</p><p><strong>Venue:</strong> ${event.location}</p><p class="mt-2">${event.description}</p>`,
+                        actionText: 'Add to Calendar',
+                        action: () => this.showToast('Event added to device calendar', 'success')
+                    };
+                },
+
+                executeModalAction() {
+                    if (this.modal.action) this.modal.action();
+                    this.modal.open = false;
+                },
+
+                // Utility Toast Notification Handler
+                showToast(message, type = 'success') {
+                    const id = ++this.toastCount;
+                    this.toasts.push({ id, message, type });
+                    setTimeout(() => this.removeToast(id), 4000);
+                },
+
+                removeToast(id) {
+                    this.toasts = this.toasts.filter(t => t.id !== id);
+                },
+
+                setActiveTab(tabId) {
+                    this.activeTab = tabId;
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }
+        }
+    </script>
+</body>
+</html>
