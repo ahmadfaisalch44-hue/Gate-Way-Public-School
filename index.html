@@ -15,10 +15,10 @@
         .hero-section-small {
             background: linear-gradient(rgba(30, 58, 138, 0.85), rgba(30, 58, 138, 0.85)), url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
         }
-        .quick-link-box, .leader-card, .academic-card, .calendar-card {
+        .quick-link-box, .leader-card, .academic-card, .holiday-card {
             transition: all 0.3s ease;
         }
-        .quick-link-box:hover, .leader-card:hover, .academic-card:hover, .calendar-card:hover {
+        .quick-link-box:hover, .leader-card:hover, .academic-card:hover, .holiday-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
@@ -30,14 +30,22 @@
         .pulse-btn {
             animation: pulse-custom 2s infinite;
         }
+        /* Hide scrollbar for mobile navigation strip */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
     </style>
 </head>
 <body class="font-sans text-gray-700 bg-gray-50 flex flex-col min-h-screen">
 
     <!-- Top Bar -->
-    <div class="bg-blue-900 text-white text-sm py-2 px-4 md:px-12 flex justify-between items-center">
+    <div class="bg-blue-900 text-white text-xs md:text-sm py-2 px-4 md:px-12 flex justify-between items-center">
         <div>
-            <i class="fas fa-phone-alt mr-2"></i> Parent Helpline: +92 321-7995900 | +92 300-4272373
+            <i class="fas fa-phone-alt mr-2"></i> Parent Helpline: +92 370-7652226 | +92 300-4272373
         </div>
         <div class="hidden md:flex space-x-4">
             <a href="#" class="hover:text-yellow-400"><i class="fab fa-facebook-f"></i></a>
@@ -48,36 +56,23 @@
 
     <!-- Main Navigation -->
     <nav class="bg-white shadow-md sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="showPage('home')">
-                <img src="logo.png" alt="Gateway Public High School Logo" class="h-14 md:h-16 w-auto object-contain" onerror="this.src='WhatsApp Image 2026-10-06 at 9.53.58 PM.jpeg'">
-                <span class="text-lg md:text-2xl font-bold text-blue-900 uppercase tracking-wide leading-tight">Gateway Public<br><span class="text-xs md:text-xl">High School</span></span>
+        <div class="container mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center">
+            <!-- Logo Section -->
+            <div class="flex items-center space-x-3 cursor-pointer w-full md:w-auto justify-center md:justify-start mb-2 md:mb-0" onclick="showPage('home')">
+                <img src="logo.png" alt="Gateway Public High School Logo" class="h-12 md:h-16 w-auto object-contain" onerror="this.src='WhatsApp Image 2026-10-06 at 9.53.58 PM.jpeg'">
+                <span class="text-lg md:text-2xl font-bold text-blue-900 uppercase tracking-wide">Gateway Public<br><span class="text-xs md:text-xl">High School</span></span>
             </div>
             
-            <!-- Desktop Menu -->
-            <div class="hidden md:flex space-x-6 text-gray-800 font-semibold items-center">
+            <!-- Navigation Links (Visible on Mobile & Desktop) -->
+            <div class="flex space-x-4 md:space-x-6 text-gray-800 font-semibold items-center overflow-x-auto w-full md:w-auto justify-start md:justify-center px-2 py-1 no-scrollbar whitespace-nowrap border-t md:border-t-0 border-gray-100">
                 <button id="nav-home" onclick="showPage('home')" class="text-blue-600 border-b-2 border-blue-600 pb-1 focus:outline-none font-bold">Home</button>
                 <button id="nav-about" onclick="showPage('about')" class="hover:text-blue-600 transition pb-1 focus:outline-none">About</button>
                 <button id="nav-academics" onclick="showPage('academics')" class="hover:text-blue-600 transition pb-1 focus:outline-none">Academics</button>
                 <button id="nav-admissions" onclick="showPage('admissions')" class="hover:text-blue-600 transition pb-1 focus:outline-none">Admissions</button>
                 <button id="nav-calendar" onclick="showPage('calendar')" class="hover:text-blue-600 transition pb-1 focus:outline-none">Calendar</button>
-               
+                <a href="#" class="hover:text-blue-600 transition pb-1 hidden md:inline">Portal</a>
+                <a href="#" class="bg-blue-900 text-white px-4 py-1.5 rounded-md hover:bg-blue-800 transition text-sm hidden md:inline">Contact</a>
             </div>
-
-            <!-- Mobile Menu Toggle Button -->
-            <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="md:hidden text-blue-900 focus:outline-none text-2xl p-2">
-                <i class="fas fa-bars"></i>
-            </button>
-        </div>
-
-        <!-- Mobile Navigation Menu -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200 px-4 pt-2 pb-4 space-y-2">
-            <button id="mobile-nav-home" onclick="showPage('home')" class="block w-full text-left py-2 font-semibold text-blue-600 border-l-4 border-blue-600 pl-2">Home</button>
-            <button id="mobile-nav-about" onclick="showPage('about')" class="block w-full text-left py-2 font-semibold text-gray-700 hover:text-blue-600 pl-2">About</button>
-            <button id="mobile-nav-academics" onclick="showPage('academics')" class="block w-full text-left py-2 font-semibold text-gray-700 hover:text-blue-600 pl-2">Academics</button>
-            <button id="mobile-nav-admissions" onclick="showPage('admissions')" class="block w-full text-left py-2 font-semibold text-gray-700 hover:text-blue-600 pl-2">Admissions</button>
-            <button id="mobile-nav-calendar" onclick="showPage('calendar')" class="block w-full text-left py-2 font-semibold text-gray-700 hover:text-blue-600 pl-2">Calendar</button>
-
         </div>
     </nav>
 
@@ -115,34 +110,60 @@
                 </div>
             </div>
 
-            <!-- Core Values -->
+            <!-- Core Values, Quotation & Goals Section -->
             <section class="py-16 bg-gray-50 container mx-auto px-4">
+                <!-- Section Header -->
                 <div class="text-center mb-12">
                     <h2 class="text-3xl font-bold text-blue-900">Why choose us</h2>
-                    <h3 class="text-xl text-gray-600 mt-2">Our Core Values</h3>
+                    <h3 class="text-xl text-gray-600 mt-2">Our Core Values & Vision</h3>
                     <p class="text-gray-500 mt-4 max-w-2xl mx-auto">We focus on scholastic development, personal growth, and ethical enrichment.</p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <div class="bg-white p-6 rounded-lg shadow-md quick-link-box border-t-4 border-blue-900">
-                        <h4 class="text-lg font-bold text-blue-900 mb-3">Admissions</h4>
-                        <p class="text-sm text-gray-600 mb-4">A complete guide: levels of education, age range, and admission criteria.</p>
-                        <button onclick="showPage('admissions')" class="text-blue-600 font-semibold text-sm hover:underline">Read More &rarr;</button>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow-md quick-link-box border-t-4 border-yellow-500">
-                        <h4 class="text-lg font-bold text-blue-900 mb-3">Parent Corner</h4>
-                        <p class="text-sm text-gray-600 mb-4">Includes all necessary information for parents regarding our education system.</p>
-                        <a href="#" class="text-blue-600 font-semibold text-sm hover:underline">Read More &rarr;</a>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow-md quick-link-box border-t-4 border-blue-900">
-                        <h4 class="text-lg font-bold text-blue-900 mb-3">Prospectus</h4>
-                        <p class="text-sm text-gray-600 mb-4">Combines all required information such as our values, curriculum, and facilities.</p>
-                        <a href="#" class="text-blue-600 font-semibold text-sm hover:underline">Read More &rarr;</a>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow-md quick-link-box border-t-4 border-yellow-500">
-                        <h4 class="text-lg font-bold text-blue-900 mb-3">Downloads</h4>
-                        <p class="text-sm text-gray-600 mb-4">Access important academic files, newsletters, and required school forms directly.</p>
-                        <a href="#" class="text-blue-600 font-semibold text-sm hover:underline">Read More &rarr;</a>
+                <!-- Quotation Block -->
+                <div class="max-w-3xl mx-auto mb-16 bg-white border-l-4 border-blue-900 rounded-r-xl p-8 shadow-md">
+                    <blockquote class="italic text-lg text-gray-700 leading-relaxed">
+                        <i class="fas fa-quote-left text-yellow-500 mr-2"></i>
+                        Education is not the learning of facts, but the training of the mind to think. At Gateway Public High School, we empower students to lead, innovate, and make a meaningful impact on society.
+                    </blockquote>
+                    <p class="mt-4 font-semibold text-blue-900 text-right">— School Leadership & Faculty</p>
+                </div>
+
+                <!-- Goals Grid -->
+                <div class="max-w-5xl mx-auto">
+                    <h3 class="text-2xl font-bold text-center text-blue-900 mb-8">Our Primary Goals</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Goal 1 -->
+                        <div class="p-6 bg-white rounded-xl shadow-md border-t-4 border-blue-900 quick-link-box">
+                            <div class="w-10 h-10 mb-4 rounded-lg bg-blue-100 text-blue-900 flex items-center justify-center font-bold text-lg">
+                                01
+                            </div>
+                            <h4 class="font-bold text-blue-900 text-lg mb-2">Academic Excellence</h4>
+                            <p class="text-sm text-gray-600 leading-relaxed">
+                                Fostering critical thinking, research capabilities, and high standards of learning across all grades.
+                            </p>
+                        </div>
+
+                        <!-- Goal 2 -->
+                        <div class="p-6 bg-white rounded-xl shadow-md border-t-4 border-yellow-500 quick-link-box">
+                            <div class="w-10 h-10 mb-4 rounded-lg bg-yellow-100 text-yellow-700 flex items-center justify-center font-bold text-lg">
+                                02
+                            </div>
+                            <h4 class="font-bold text-blue-900 text-lg mb-2">Character Building</h4>
+                            <p class="text-sm text-gray-600 leading-relaxed">
+                                Instilling core ethical values, integrity, leadership qualities, and personal responsibility.
+                            </p>
+                        </div>
+
+                        <!-- Goal 3 -->
+                        <div class="p-6 bg-white rounded-xl shadow-md border-t-4 border-blue-900 quick-link-box">
+                            <div class="w-10 h-10 mb-4 rounded-lg bg-blue-100 text-blue-900 flex items-center justify-center font-bold text-lg">
+                                03
+                            </div>
+                            <h4 class="font-bold text-blue-900 text-lg mb-2">Holistic Growth</h4>
+                            <p class="text-sm text-gray-600 leading-relaxed">
+                                Nurturing athletic, creative, and technological skills alongside formal academic pursuits.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -430,48 +451,14 @@
 
         <!-- ==================== ADMISSIONS PAGE SECTION ==================== -->
         <div id="page-admissions" class="hidden">
-            <!-- Hero Section -->
+            <!-- Hero Banner -->
             <header class="hero-section-small h-[250px] flex flex-col items-center justify-center text-center text-white px-4">
-                <h1 class="text-4xl md:text-5xl font-bold mb-2 drop-shadow-lg">Admissions & Fee Structure</h1>
+                <h1 class="text-4xl md:text-5xl font-bold mb-2 drop-shadow-lg">Admissions Open</h1>
                 <p class="text-lg md:text-xl font-light max-w-2xl text-yellow-400 drop-shadow-md">Join Gateway Public High School Today</p>
             </header>
 
-            <!-- Admission Process -->
-            <section class="py-16 bg-white">
-                <div class="container mx-auto px-4">
-                    <div class="text-center mb-12">
-                        <h2 class="text-3xl font-bold text-blue-900">Admission Process</h2>
-                        <p class="text-gray-500 mt-2">Simple 4-Step Admission Procedure</p>
-                        <div class="w-24 h-1 bg-yellow-500 mx-auto mt-4 rounded"></div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-6xl mx-auto">
-                        <div class="bg-gray-50 p-6 rounded-xl border-t-4 border-blue-900 text-center shadow-sm">
-                            <div class="w-12 h-12 bg-blue-900 text-white font-bold rounded-full flex items-center justify-center mx-auto mb-4 text-xl">1</div>
-                            <h3 class="font-bold text-blue-900 text-lg mb-2">Obtain Form</h3>
-                            <p class="text-sm text-gray-600">Get the admission form from office or fill online.</p>
-                        </div>
-                        <div class="bg-gray-50 p-6 rounded-xl border-t-4 border-yellow-500 text-center shadow-sm">
-                            <div class="w-12 h-12 bg-yellow-500 text-blue-900 font-bold rounded-full flex items-center justify-center mx-auto mb-4 text-xl">2</div>
-                            <h3 class="font-bold text-blue-900 text-lg mb-2">Document Submission</h3>
-                            <p class="text-sm text-gray-600">Submit required documents with birth certificate/B-Form.</p>
-                        </div>
-                        <div class="bg-gray-50 p-6 rounded-xl border-t-4 border-blue-900 text-center shadow-sm">
-                            <div class="w-12 h-12 bg-blue-900 text-white font-bold rounded-full flex items-center justify-center mx-auto mb-4 text-xl">3</div>
-                            <h3 class="font-bold text-blue-900 text-lg mb-2">Assessment/Interview</h3>
-                            <p class="text-sm text-gray-600">Basic evaluation for placement in correct class level.</p>
-                        </div>
-                        <div class="bg-gray-50 p-6 rounded-xl border-t-4 border-yellow-500 text-center shadow-sm">
-                            <div class="w-12 h-12 bg-yellow-500 text-blue-900 font-bold rounded-full flex items-center justify-center mx-auto mb-4 text-xl">4</div>
-                            <h3 class="font-bold text-blue-900 text-lg mb-2">Fee Submission</h3>
-                            <p class="text-sm text-gray-600">Pay admission charges and confirm enrollment.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Fee Structure Tables -->
-            <section class="py-16 bg-blue-50 border-t border-gray-200">
+            <!-- Fee Structure Section -->
+            <section class="py-16 bg-blue-50/50">
                 <div class="container mx-auto px-4 max-w-6xl">
                     <div class="text-center mb-12">
                         <h2 class="text-3xl font-bold text-blue-900">Fee Structure</h2>
@@ -479,131 +466,144 @@
                         <div class="w-24 h-1 bg-yellow-500 mx-auto mt-4 rounded"></div>
                     </div>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        <!-- Main Fee Table -->
-                        <div class="lg:col-span-2 bg-white rounded-xl shadow-md overflow-hidden border border-gray-200">
-                            <div class="bg-blue-900 text-white py-4 px-6 font-bold text-lg flex items-center justify-between">
-                                <span>Class Tuition & Admission Fees</span>
-                                <i class="fas fa-file-invoice-dollar text-yellow-400"></i>
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                        <!-- Tuition & Admission Fee Table -->
+                        <div class="lg:col-span-2 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+                            <div class="bg-blue-900 text-white p-4 flex justify-between items-center">
+                                <h3 class="text-lg font-bold">Class Tuition & Admission Fees</h3>
+                                <i class="fas fa-receipt text-yellow-400"></i>
                             </div>
                             <div class="overflow-x-auto">
-                                <table class="w-full text-left border-collapse text-sm">
-                                    <thead>
-                                        <tr class="bg-gray-100 text-blue-900 font-bold border-b border-gray-200">
+                                <table class="w-full text-left text-sm text-gray-700">
+                                    <thead class="bg-gray-100 uppercase text-xs text-gray-600 border-b">
+                                        <tr>
                                             <th class="py-3 px-6">Class</th>
                                             <th class="py-3 px-6 text-center">Admission Fee (PKR)</th>
                                             <th class="py-3 px-6 text-center">Monthly Fee (PKR)</th>
                                         </tr>
                                     </thead>
-                                    <tbody class="divide-y divide-gray-100 text-gray-700">
-                                        <tr class="hover:bg-blue-50 transition"><td class="py-3 px-6 font-semibold">Play Group</td><td class="py-3 px-6 text-center">1000</td><td class="py-3 px-6 text-center">2000</td></tr>
-                                        <tr class="hover:bg-blue-50 transition"><td class="py-3 px-6 font-semibold">Nursery</td><td class="py-3 px-6 text-center">1000</td><td class="py-3 px-6 text-center">2000</td></tr>
-                                        <tr class="hover:bg-blue-50 transition"><td class="py-3 px-6 font-semibold">Prep</td><td class="py-3 px-6 text-center">1000</td><td class="py-3 px-6 text-center">2000</td></tr>
-                                        <tr class="hover:bg-blue-50 transition"><td class="py-3 px-6 font-semibold">Class 1</td><td class="py-3 px-6 text-center">1000</td><td class="py-3 px-6 text-center">2500</td></tr>
-                                        <tr class="hover:bg-blue-50 transition"><td class="py-3 px-6 font-semibold">Class 2</td><td class="py-3 px-6 text-center">1000</td><td class="py-3 px-6 text-center">2500</td></tr>
-                                        <tr class="hover:bg-blue-50 transition"><td class="py-3 px-6 font-semibold">Class 3</td><td class="py-3 px-6 text-center">1000</td><td class="py-3 px-6 text-center">2500</td></tr>
-                                        <tr class="hover:bg-blue-50 transition"><td class="py-3 px-6 font-semibold">Class 4</td><td class="py-3 px-6 text-center">1000</td><td class="py-3 px-6 text-center">2500</td></tr>
-                                        <tr class="hover:bg-blue-50 transition"><td class="py-3 px-6 font-semibold">Class 5</td><td class="py-3 px-6 text-center">1000</td><td class="py-3 px-6 text-center">2500</td></tr>
-                                        <tr class="hover:bg-blue-50 transition"><td class="py-3 px-6 font-semibold">Class 6</td><td class="py-3 px-6 text-center">1000</td><td class="py-3 px-6 text-center">3000</td></tr>
-                                        <tr class="hover:bg-blue-50 transition"><td class="py-3 px-6 font-semibold">Class 7</td><td class="py-3 px-6 text-center">1000</td><td class="py-3 px-6 text-center">3000</td></tr>
-                                        <tr class="hover:bg-blue-50 transition"><td class="py-3 px-6 font-semibold">Class 8</td><td class="py-3 px-6 text-center">1000</td><td class="py-3 px-6 text-center">3000</td></tr>
-                                        <tr class="hover:bg-blue-50 transition"><td class="py-3 px-6 font-semibold">Class 9</td><td class="py-3 px-6 text-center">1000</td><td class="py-3 px-6 text-center">3500</td></tr>
-                                        <tr class="hover:bg-blue-50 transition"><td class="py-3 px-6 font-semibold">Class 10</td><td class="py-3 px-6 text-center">1000</td><td class="py-3 px-6 text-center">4000</td></tr>
+                                    <tbody class="divide-y divide-gray-100">
+                                        <tr class="hover:bg-gray-50 transition">
+                                            <td class="py-3.5 px-6 font-semibold text-blue-900">Play Group</td>
+                                            <td class="py-3.5 px-6 text-center">1000</td>
+                                            <td class="py-3.5 px-6 text-center">2000</td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50 transition">
+                                            <td class="py-3.5 px-6 font-semibold text-blue-900">Nursery</td>
+                                            <td class="py-3.5 px-6 text-center">1000</td>
+                                            <td class="py-3.5 px-6 text-center">2000</td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50 transition">
+                                            <td class="py-3.5 px-6 font-semibold text-blue-900">Prep</td>
+                                            <td class="py-3.5 px-6 text-center">1000</td>
+                                            <td class="py-3.5 px-6 text-center">2000</td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50 transition">
+                                            <td class="py-3.5 px-6 font-semibold text-blue-900">Class 1 to 5</td>
+                                            <td class="py-3.5 px-6 text-center">1000</td>
+                                            <td class="py-3.5 px-6 text-center">2500</td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50 transition">
+                                            <td class="py-3.5 px-6 font-semibold text-blue-900">Class 6 to 8</td>
+                                            <td class="py-3.5 px-6 text-center">1000</td>
+                                            <td class="py-3.5 px-6 text-center">3000</td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50 transition">
+                                            <td class="py-3.5 px-6 font-semibold text-blue-900">Class 9</td>
+                                            <td class="py-3.5 px-6 text-center">1000</td>
+                                            <td class="py-3.5 px-6 text-center">3500</td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50 transition">
+                                            <td class="py-3.5 px-6 font-semibold text-blue-900">Class 10</td>
+                                            <td class="py-3.5 px-6 text-center">1000</td>
+                                            <td class="py-3.5 px-6 text-center">4000</td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
 
-                        <!-- Additional Mandatory Charges & Required Docs -->
-                        <div class="space-y-6">
-                            <!-- Additional Items Fee Table -->
-                            <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200">
-                                <div class="bg-yellow-500 text-blue-900 py-4 px-6 font-bold text-lg flex items-center justify-between">
-                                    <span>One-Time Material Charges</span>
-                                    <i class="fas fa-box-open"></i>
-                                </div>
-                                <table class="w-full text-left border-collapse text-sm">
-                                    <thead>
-                                        <tr class="bg-gray-100 text-blue-900 font-bold border-b border-gray-200">
-                                            <th class="py-3 px-6">Item</th>
-                                            <th class="py-3 px-6 text-right">Price (PKR)</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="divide-y divide-gray-100 text-gray-700">
-                                        <tr class="hover:bg-yellow-50 transition"><td class="py-3 px-6 font-semibold">Diary</td><td class="py-3 px-6 text-right">150</td></tr>
-                                        <tr class="hover:bg-yellow-50 transition"><td class="py-3 px-6 font-semibold">Notebooks</td><td class="py-3 px-6 text-right">150</td></tr>
-                                        <tr class="hover:bg-yellow-50 transition"><td class="py-3 px-6 font-semibold">Badge</td><td class="py-3 px-6 text-right">150</td></tr>
-                                        <tr class="hover:bg-yellow-50 transition"><td class="py-3 px-6 font-semibold">ID Card</td><td class="py-3 px-6 text-right">100</td></tr>
-                                        <tr class="hover:bg-yellow-50 transition"><td class="py-3 px-6 font-semibold">Fees Card</td><td class="py-3 px-6 text-right">300</td></tr>
-                                    </tbody>
-                                </table>
+                        <!-- One-Time Charges Card -->
+                        <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+                            <div class="bg-yellow-500 text-blue-900 p-4 flex justify-between items-center font-bold">
+                                <h3 class="text-lg">One-Time Material Charges</h3>
+                                <i class="fas fa-box-open"></i>
                             </div>
-
-                            <!-- Required Documents Card -->
-                            <div class="bg-white rounded-xl shadow-md p-6 border-t-4 border-blue-900">
-                                <h3 class="text-lg font-bold text-blue-900 mb-4 flex items-center">
-                                    <i class="fas fa-folder-open text-yellow-500 mr-2"></i> Required Documents
-                                </h3>
-                                <ul class="text-sm text-gray-600 space-y-2 list-disc list-inside">
-                                    <li>Copy of Student's B-Form / Birth Certificate</li>
-                                    <li>4 Passport size photographs (Blue background)</li>
-                                    <li>Copy of Father's / Guardian's CNIC</li>
-                                    <li>School Leaving Certificate (for transfer students)</li>
-                                </ul>
+                            <div class="p-6 space-y-4 text-sm text-gray-700">
+                                <div class="flex justify-between items-center pb-3 border-b border-gray-100">
+                                    <span>Diary / Notebooks / Badge</span>
+                                    <span class="font-bold text-blue-900">150 Each</span>
+                                </div>
+                                <div class="flex justify-between items-center pb-3 border-b border-gray-100">
+                                    <span>ID Card</span>
+                                    <span class="font-bold text-blue-900">100</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span>Fees Card</span>
+                                    <span class="font-bold text-blue-900">300</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Admission Inquiry Form -->
-            <section class="py-16 bg-white">
-                <div class="container mx-auto px-4 max-w-4xl">
+            <!-- Online Admission Inquiry Form -->
+            <section class="py-16 bg-white border-t border-gray-200">
+                <div class="container mx-auto px-4 max-w-3xl">
                     <div class="text-center mb-10">
                         <h2 class="text-3xl font-bold text-blue-900">Online Admission Inquiry</h2>
-                        <p class="text-gray-500 mt-2">Fill out this form to submit your application directly to our WhatsApp.</p>
+                        <p class="text-gray-600 mt-2">Submit your application directly to our WhatsApp.</p>
                         <div class="w-24 h-1 bg-yellow-500 mx-auto mt-4 rounded"></div>
                     </div>
 
-                    <form id="admissionForm" onsubmit="sendToWhatsApp(event)" class="bg-gray-50 p-8 rounded-xl shadow-lg border border-gray-200 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <form onsubmit="sendWhatsAppEnquiry(event)" class="bg-gray-50 border border-gray-200 p-8 rounded-2xl shadow-lg space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-gray-700 font-bold mb-2 text-sm" for="studentName">Student Full Name *</label>
+                                <input type="text" id="studentName" required placeholder="Enter student name" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-900 focus:outline-none transition bg-white text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-bold mb-2 text-sm" for="fatherName">Father / Guardian Name *</label>
+                                <input type="text" id="fatherName" required placeholder="Enter father name" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-900 focus:outline-none transition bg-white text-sm">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-gray-700 font-bold mb-2 text-sm" for="targetClass">Class Applying For *</label>
+                                <select id="targetClass" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-900 focus:outline-none transition bg-white text-sm text-gray-700">
+                                    <option value="" disabled selected>Select Class</option>
+                                    <option value="Play Group">Play Group</option>
+                                    <option value="Nursery">Nursery</option>
+                                    <option value="Prep">Prep</option>
+                                    <option value="Class 1">Class 1</option>
+                                    <option value="Class 2">Class 2</option>
+                                    <option value="Class 3">Class 3</option>
+                                    <option value="Class 4">Class 4</option>
+                                    <option value="Class 5">Class 5</option>
+                                    <option value="Class 6">Class 6</option>
+                                    <option value="Class 7">Class 7</option>
+                                    <option value="Class 8">Class 8</option>
+                                    <option value="Class 9">Class 9</option>
+                                    <option value="Class 10">Class 10</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 font-bold mb-2 text-sm" for="contactPhone">Contact Phone Number *</label>
+                                <input type="tel" id="contactPhone" required placeholder="03xx-xxxxxxx" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-900 focus:outline-none transition bg-white text-sm">
+                            </div>
+                        </div>
+
                         <div>
-                            <label class="block text-sm font-bold text-blue-900 mb-2">Student Full Name *</label>
-                            <input type="text" id="studentName" placeholder="Enter student name" class="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-900 bg-white" required>
+                            <label class="block text-gray-700 font-bold mb-2 text-sm" for="residentialAddress">Residential Address</label>
+                            <textarea id="residentialAddress" rows="3" placeholder="Enter complete address" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-900 focus:outline-none transition bg-white text-sm"></textarea>
                         </div>
-                        <div>
-                            <label class="block text-sm font-bold text-blue-900 mb-2">Father / Guardian Name *</label>
-                            <input type="text" id="fatherName" placeholder="Enter father name" class="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-900 bg-white" required>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-bold text-blue-900 mb-2">Class Applying For *</label>
-                            <select id="selectedClass" class="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-900 bg-white" required>
-                                <option value="">Select Class</option>
-                                <option>Play Group</option>
-                                <option>Nursery</option>
-                                <option>Prep</option>
-                                <option>Class 1</option>
-                                <option>Class 2</option>
-                                <option>Class 3</option>
-                                <option>Class 4</option>
-                                <option>Class 5</option>
-                                <option>Class 6</option>
-                                <option>Class 7</option>
-                                <option>Class 8</option>
-                                <option>Class 9</option>
-                                <option>Class 10</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-bold text-blue-900 mb-2">Contact Phone Number *</label>
-                            <input type="tel" id="phoneNumber" placeholder="03xx-xxxxxxx" class="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-900 bg-white" required>
-                        </div>
-                        <div class="md:col-span-2">
-                            <label class="block text-sm font-bold text-blue-900 mb-2">Residential Address</label>
-                            <textarea id="address" rows="3" placeholder="Enter complete address" class="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-blue-900 bg-white"></textarea>
-                        </div>
-                        <div class="md:col-span-2 text-center mt-4">
-                            <button type="submit" class="bg-green-600 text-white font-bold py-3 px-10 rounded-full hover:bg-green-700 transition shadow-md flex items-center justify-center mx-auto">
-                                <i class="fab fa-whatsapp text-2xl mr-3"></i> Submit Application Inquiry via WhatsApp
+
+                        <div class="text-center pt-2">
+                            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3.5 px-8 rounded-full transition duration-300 shadow-lg hover:shadow-xl inline-flex items-center space-x-3 text-base">
+                                <i class="fab fa-whatsapp text-2xl"></i>
+                                <span>Submit Application via WhatsApp</span>
                             </button>
                         </div>
                     </form>
@@ -614,208 +614,131 @@
 
         <!-- ==================== CALENDAR PAGE SECTION ==================== -->
         <div id="page-calendar" class="hidden">
-            <!-- Hero Section -->
+            <!-- Hero Banner -->
             <header class="hero-section-small h-[250px] flex flex-col items-center justify-center text-center text-white px-4">
                 <h1 class="text-4xl md:text-5xl font-bold mb-2 drop-shadow-lg">Academic & Holiday Calendar</h1>
-                <p class="text-lg md:text-xl font-light max-w-2xl text-yellow-400 drop-shadow-md">National Holidays, Islamic Festivals & Academic Milestones (2026)</p>
+                <p class="text-lg md:text-xl font-light max-w-2xl text-yellow-400 drop-shadow-md">National, Islamic, and School Vacations for 2026</p>
             </header>
 
-            <!-- Legend & Filter Bar -->
-            <section class="py-8 bg-white border-b border-gray-200 shadow-sm sticky top-[73px] z-40">
-                <div class="container mx-auto px-4 flex flex-wrap items-center justify-between gap-4">
-                    <!-- Event Legend -->
-                    <div class="flex flex-wrap items-center gap-4 text-xs md:text-sm font-bold">
-                        <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-green-500 mr-2"></span> Islamic Holiday</span>
-                        <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-blue-600 mr-2"></span> National Holiday</span>
-                        <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-yellow-500 mr-2"></span> Academic & Exam</span>
-                        <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-purple-600 mr-2"></span> Vacation / Recess</span>
-                    </div>
-
-                    <!-- Month Filter Dropdown -->
-                    <div>
-                        <select id="monthFilter" onchange="filterCalendar()" class="bg-gray-50 border border-gray-300 font-bold text-blue-900 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-900">
-                            <option value="all">All Months</option>
-                            <option value="feb">February 2026</option>
-                            <option value="mar">March 2026</option>
-                            <option value="may">May 2026</option>
-                            <option value="jun">June 2026</option>
-                            <option value="jul">July 2026</option>
-                            <option value="aug">August 2026</option>
-                            <option value="sep">September 2026</option>
-                            <option value="nov">November 2026</option>
-                            <option value="dec">December 2026</option>
-                        </select>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Calendar Schedule List -->
-            <section class="py-16 bg-gray-50">
+            <!-- Holidays List Section -->
+            <section class="py-16 bg-white">
                 <div class="container mx-auto px-4 max-w-6xl">
+                    <div class="text-center mb-12">
+                        <h2 class="text-3xl font-bold text-blue-900">Official Holidays 2026</h2>
+                        <p class="text-gray-600 mt-2">All National & Islamic Gazetted Holidays in Pakistan</p>
+                        <div class="w-24 h-1 bg-yellow-500 mx-auto mt-4 rounded"></div>
+                    </div>
 
-                    <!-- Holidays & Events Grid -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="calendarEvents">
+                    <!-- Note on Islamic Dates -->
+                    <div class="mb-8 p-4 bg-yellow-50 border-l-4 border-yellow-500 text-yellow-800 rounded-r-md text-sm flex items-center space-x-3">
+                        <i class="fas fa-moon text-xl text-yellow-600"></i>
+                        <span><strong>Note:</strong> Islamic holiday dates are subject to the sighting of the moon according to the official Central Ruet-e-Hilal Committee.</span>
+                    </div>
 
-                        <!-- Kashmir Day -->
-                        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-600 calendar-card" data-month="feb">
-                            <div class="flex justify-between items-start mb-3">
-                                <span class="bg-blue-100 text-blue-800 font-bold text-xs px-3 py-1 rounded-full uppercase">National Holiday</span>
-                                <span class="text-xs text-gray-500 font-semibold"><i class="far fa-calendar-alt mr-1"></i> Feb 5, 2026</span>
-                            </div>
-                            <h3 class="text-lg font-bold text-blue-900 mb-1">Kashmir Day</h3>
-                            <p class="text-sm text-gray-600">Public Holiday across Pakistan. School remains closed.</p>
+                    <!-- Table of Holidays -->
+                    <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden mb-12">
+                        <div class="bg-blue-900 text-white p-4 flex justify-between items-center">
+                            <h3 class="text-lg font-bold">2026 Annual Holiday Schedule</h3>
+                            <i class="fas fa-calendar-alt text-yellow-400 text-xl"></i>
                         </div>
-
-                        <!-- Ramadan Starts -->
-                        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500 calendar-card" data-month="feb">
-                            <div class="flex justify-between items-start mb-3">
-                                <span class="bg-green-100 text-green-800 font-bold text-xs px-3 py-1 rounded-full uppercase">Islamic Event</span>
-                                <span class="text-xs text-gray-500 font-semibold"><i class="far fa-calendar-alt mr-1"></i> Feb 18, 2026</span>
-                            </div>
-                            <h3 class="text-lg font-bold text-blue-900 mb-1">Commencement of Ramadan</h3>
-                            <p class="text-sm text-gray-600">Start of Holy Ramadan (1447 AH). Revised short school timings apply.</p>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm text-gray-700">
+                                <thead class="bg-gray-100 uppercase text-xs text-gray-600 border-b">
+                                    <tr>
+                                        <th class="py-3.5 px-6">Holiday Name</th>
+                                        <th class="py-3.5 px-6">Date(s)</th>
+                                        <th class="py-3.5 px-6">Day(s)</th>
+                                        <th class="py-3.5 px-6 text-center">Category</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-100">
+                                    <tr class="hover:bg-blue-50/50 transition">
+                                        <td class="py-4 px-6 font-semibold text-blue-900">Kashmir Solidarity Day</td>
+                                        <td class="py-4 px-6">February 5, 2026</td>
+                                        <td class="py-4 px-6">Thursday</td>
+                                        <td class="py-4 px-6 text-center"><span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full font-semibold">National</span></td>
+                                    </tr>
+                                    <tr class="hover:bg-blue-50/50 transition">
+                                        <td class="py-4 px-6 font-semibold text-blue-900">Shab-e-Barat</td>
+                                        <td class="py-4 px-6">February 15, 2026</td>
+                                        <td class="py-4 px-6">Sunday</td>
+                                        <td class="py-4 px-6 text-center"><span class="bg-emerald-100 text-emerald-800 text-xs px-3 py-1 rounded-full font-semibold">Islamic</span></td>
+                                    </tr>
+                                    <tr class="hover:bg-blue-50/50 transition">
+                                        <td class="py-4 px-6 font-semibold text-blue-900">Start of Ramadan</td>
+                                        <td class="py-4 px-6">March 1, 2026</td>
+                                        <td class="py-4 px-6">Sunday</td>
+                                        <td class="py-4 px-6 text-center"><span class="bg-emerald-100 text-emerald-800 text-xs px-3 py-1 rounded-full font-semibold">Islamic</span></td>
+                                    </tr>
+                                    <tr class="hover:bg-blue-50/50 transition">
+                                        <td class="py-4 px-6 font-semibold text-blue-900">Pakistan Day</td>
+                                        <td class="py-4 px-6">March 23, 2026</td>
+                                        <td class="py-4 px-6">Monday</td>
+                                        <td class="py-4 px-6 text-center"><span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full font-semibold">National</span></td>
+                                    </tr>
+                                    <tr class="hover:bg-blue-50/50 transition">
+                                        <td class="py-4 px-6 font-semibold text-blue-900">Eid-ul-Fitr Holidays</td>
+                                        <td class="py-4 px-6">March 20 – March 23, 2026</td>
+                                        <td class="py-4 px-6">Friday – Monday</td>
+                                        <td class="py-4 px-6 text-center"><span class="bg-emerald-100 text-emerald-800 text-xs px-3 py-1 rounded-full font-semibold">Islamic</span></td>
+                                    </tr>
+                                    <tr class="hover:bg-blue-50/50 transition">
+                                        <td class="py-4 px-6 font-semibold text-blue-900">Labor Day</td>
+                                        <td class="py-4 px-6">May 1, 2026</td>
+                                        <td class="py-4 px-6">Friday</td>
+                                        <td class="py-4 px-6 text-center"><span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full font-semibold">National</span></td>
+                                    </tr>
+                                    <tr class="hover:bg-blue-50/50 transition">
+                                        <td class="py-4 px-6 font-semibold text-blue-900">Eid-ul-Adha Holidays</td>
+                                        <td class="py-4 px-6">May 27 – May 29, 2026</td>
+                                        <td class="py-4 px-6">Wednesday – Friday</td>
+                                        <td class="py-4 px-6 text-center"><span class="bg-emerald-100 text-emerald-800 text-xs px-3 py-1 rounded-full font-semibold">Islamic</span></td>
+                                    </tr>
+                                    <tr class="hover:bg-blue-50/50 transition">
+                                        <td class="py-4 px-6 font-semibold text-blue-900">Ashura (9th & 10th Muharram)</td>
+                                        <td class="py-4 px-6">June 25 – June 26, 2026</td>
+                                        <td class="py-4 px-6">Thursday – Friday</td>
+                                        <td class="py-4 px-6 text-center"><span class="bg-emerald-100 text-emerald-800 text-xs px-3 py-1 rounded-full font-semibold">Islamic</span></td>
+                                    </tr>
+                                    <tr class="hover:bg-blue-50/50 transition">
+                                        <td class="py-4 px-6 font-semibold text-blue-900">Summer Vacations</td>
+                                        <td class="py-4 px-6">June 1 – July 31, 2026</td>
+                                        <td class="py-4 px-6">2 Months</td>
+                                        <td class="py-4 px-6 text-center"><span class="bg-yellow-100 text-yellow-800 text-xs px-3 py-1 rounded-full font-semibold">School Break</span></td>
+                                    </tr>
+                                    <tr class="hover:bg-blue-50/50 transition">
+                                        <td class="py-4 px-6 font-semibold text-blue-900">Independence Day</td>
+                                        <td class="py-4 px-6">August 14, 2026</td>
+                                        <td class="py-4 px-6">Friday</td>
+                                        <td class="py-4 px-6 text-center"><span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full font-semibold">National</span></td>
+                                    </tr>
+                                    <tr class="hover:bg-blue-50/50 transition">
+                                        <td class="py-4 px-6 font-semibold text-blue-900">Eid Milad-un-Nabi (12 Rabi-ul-Awwal)</td>
+                                        <td class="py-4 px-6">August 25, 2026</td>
+                                        <td class="py-4 px-6">Tuesday</td>
+                                        <td class="py-4 px-6 text-center"><span class="bg-emerald-100 text-emerald-800 text-xs px-3 py-1 rounded-full font-semibold">Islamic</span></td>
+                                    </tr>
+                                    <tr class="hover:bg-blue-50/50 transition">
+                                        <td class="py-4 px-6 font-semibold text-blue-900">Iqbal Day</td>
+                                        <td class="py-4 px-6">November 9, 2026</td>
+                                        <td class="py-4 px-6">Monday</td>
+                                        <td class="py-4 px-6 text-center"><span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full font-semibold">National</span></td>
+                                    </tr>
+                                    <tr class="hover:bg-blue-50/50 transition">
+                                        <td class="py-4 px-6 font-semibold text-blue-900">Quaid-e-Azam Day / Christmas</td>
+                                        <td class="py-4 px-6">December 25, 2026</td>
+                                        <td class="py-4 px-6">Friday</td>
+                                        <td class="py-4 px-6 text-center"><span class="bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full font-semibold">National</span></td>
+                                    </tr>
+                                    <tr class="hover:bg-blue-50/50 transition">
+                                        <td class="py-4 px-6 font-semibold text-blue-900">Winter Break</td>
+                                        <td class="py-4 px-6">December 24 – December 31, 2026</td>
+                                        <td class="py-4 px-6">1 Week</td>
+                                        <td class="py-4 px-6 text-center"><span class="bg-yellow-100 text-yellow-800 text-xs px-3 py-1 rounded-full font-semibold">School Break</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-
-                        <!-- Mid-Term Examinations -->
-                        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-yellow-500 calendar-card" data-month="mar">
-                            <div class="flex justify-between items-start mb-3">
-                                <span class="bg-yellow-100 text-yellow-800 font-bold text-xs px-3 py-1 rounded-full uppercase">Academic Exam</span>
-                                <span class="text-xs text-gray-500 font-semibold"><i class="far fa-calendar-alt mr-1"></i> Mar 2 - Mar 12</span>
-                            </div>
-                            <h3 class="text-lg font-bold text-blue-900 mb-1">First Term / Mid-Term Exams</h3>
-                            <p class="text-sm text-gray-600">Mid-term examinations for Playgroup to Grade 10.</p>
-                        </div>
-
-                        <!-- Eid-ul-Fitr Holidays -->
-                        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500 calendar-card" data-month="mar">
-                            <div class="flex justify-between items-start mb-3">
-                                <span class="bg-green-100 text-green-800 font-bold text-xs px-3 py-1 rounded-full uppercase">Islamic Holiday</span>
-                                <span class="text-xs text-gray-500 font-semibold"><i class="far fa-calendar-alt mr-1"></i> Mar 20 - Mar 22</span>
-                            </div>
-                            <h3 class="text-lg font-bold text-blue-900 mb-1">Eid-ul-Fitr Offs</h3>
-                            <p class="text-sm text-gray-600">1st Shawwal 1447 AH. School closed for Eid celebrations.</p>
-                        </div>
-
-                        <!-- Pakistan Day -->
-                        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-600 calendar-card" data-month="mar">
-                            <div class="flex justify-between items-start mb-3">
-                                <span class="bg-blue-100 text-blue-800 font-bold text-xs px-3 py-1 rounded-full uppercase">National Holiday</span>
-                                <span class="text-xs text-gray-500 font-semibold"><i class="far fa-calendar-alt mr-1"></i> Mar 23, 2026</span>
-                            </div>
-                            <h3 class="text-lg font-bold text-blue-900 mb-1">Pakistan Day</h3>
-                            <p class="text-sm text-gray-600">Commemorating the Lahore Resolution of 1940. Public Holiday.</p>
-                        </div>
-
-                        <!-- Labour Day -->
-                        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-600 calendar-card" data-month="may">
-                            <div class="flex justify-between items-start mb-3">
-                                <span class="bg-blue-100 text-blue-800 font-bold text-xs px-3 py-1 rounded-full uppercase">National Holiday</span>
-                                <span class="text-xs text-gray-500 font-semibold"><i class="far fa-calendar-alt mr-1"></i> May 1, 2026</span>
-                            </div>
-                            <h3 class="text-lg font-bold text-blue-900 mb-1">Labour Day</h3>
-                            <p class="text-sm text-gray-600">International Workers' Day. School remains closed.</p>
-                        </div>
-
-                        <!-- Eid-ul-Azha Holidays -->
-                        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500 calendar-card" data-month="may">
-                            <div class="flex justify-between items-start mb-3">
-                                <span class="bg-green-100 text-green-800 font-bold text-xs px-3 py-1 rounded-full uppercase">Islamic Holiday</span>
-                                <span class="text-xs text-gray-500 font-semibold"><i class="far fa-calendar-alt mr-1"></i> May 27 - May 29</span>
-                            </div>
-                            <h3 class="text-lg font-bold text-blue-900 mb-1">Eid-ul-Azha Offs</h3>
-                            <p class="text-sm text-gray-600">10th Zil-Hajj 1447 AH. Religious holiday & Sunnah Ibrahim observance.</p>
-                        </div>
-
-                        <!-- Youm-e-Takbeer -->
-                        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-600 calendar-card" data-month="may">
-                            <div class="flex justify-between items-start mb-3">
-                                <span class="bg-blue-100 text-blue-800 font-bold text-xs px-3 py-1 rounded-full uppercase">National Holiday</span>
-                                <span class="text-xs text-gray-500 font-semibold"><i class="far fa-calendar-alt mr-1"></i> May 28, 2026</span>
-                            </div>
-                            <h3 class="text-lg font-bold text-blue-900 mb-1">Youm-e-Takbeer</h3>
-                            <p class="text-sm text-gray-600">National day commemorating 1998 nuclear tests. Public Holiday.</p>
-                        </div>
-
-                        <!-- Summer Vacations -->
-                        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-purple-600 calendar-card" data-month="jun">
-                            <div class="flex justify-between items-start mb-3">
-                                <span class="bg-purple-100 text-purple-800 font-bold text-xs px-3 py-1 rounded-full uppercase">Vacation</span>
-                                <span class="text-xs text-gray-500 font-semibold"><i class="far fa-calendar-alt mr-1"></i> Jun 1 - Jul 31</span>
-                            </div>
-                            <h3 class="text-lg font-bold text-blue-900 mb-1">Summer Vacations</h3>
-                            <p class="text-sm text-gray-600">Annual summer break. Homework packs to be submitted online.</p>
-                        </div>
-
-                        <!-- Ashura (9th & 10th Moharram) -->
-                        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500 calendar-card" data-month="jun">
-                            <div class="flex justify-between items-start mb-3">
-                                <span class="bg-green-100 text-green-800 font-bold text-xs px-3 py-1 rounded-full uppercase">Islamic Holiday</span>
-                                <span class="text-xs text-gray-500 font-semibold"><i class="far fa-calendar-alt mr-1"></i> Jun 24 - Jun 25</span>
-                            </div>
-                            <h3 class="text-lg font-bold text-blue-900 mb-1">Ashura (9th & 10th Moharram)</h3>
-                            <p class="text-sm text-gray-600">9th & 10th Moharram 1448 AH. Islamic solemn holidays.</p>
-                        </div>
-
-                        <!-- Independence Day -->
-                        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-600 calendar-card" data-month="aug">
-                            <div class="flex justify-between items-start mb-3">
-                                <span class="bg-blue-100 text-blue-800 font-bold text-xs px-3 py-1 rounded-full uppercase">National Holiday</span>
-                                <span class="text-xs text-gray-500 font-semibold"><i class="far fa-calendar-alt mr-1"></i> Aug 14, 2026</span>
-                            </div>
-                            <h3 class="text-lg font-bold text-blue-900 mb-1">Independence Day</h3>
-                            <p class="text-sm text-gray-600">79th Independence Day of Pakistan. Flag hoisting ceremony at campus.</p>
-                        </div>
-
-                        <!-- Eid Milad-un-Nabi -->
-                        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500 calendar-card" data-month="aug">
-                            <div class="flex justify-between items-start mb-3">
-                                <span class="bg-green-100 text-green-800 font-bold text-xs px-3 py-1 rounded-full uppercase">Islamic Holiday</span>
-                                <span class="text-xs text-gray-500 font-semibold"><i class="far fa-calendar-alt mr-1"></i> Aug 25, 2026</span>
-                            </div>
-                            <h3 class="text-lg font-bold text-blue-900 mb-1">Eid Milad-un-Nabi (PBUH)</h3>
-                            <p class="text-sm text-gray-600">12th Rabi-ul-Awwal 1448 AH. Birth of Prophet Muhammad ﷺ. Public Holiday.</p>
-                        </div>
-
-                        <!-- Parent Teacher Meeting -->
-                        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-yellow-500 calendar-card" data-month="sep">
-                            <div class="flex justify-between items-start mb-3">
-                                <span class="bg-yellow-100 text-yellow-800 font-bold text-xs px-3 py-1 rounded-full uppercase">Academic Event</span>
-                                <span class="text-xs text-gray-500 font-semibold"><i class="far fa-calendar-alt mr-1"></i> Sep 19, 2026</span>
-                            </div>
-                            <h3 class="text-lg font-bold text-blue-900 mb-1">Parent-Teacher Conference (PTM)</h3>
-                            <p class="text-sm text-gray-600">Discussion on first term student performance and progress reports.</p>
-                        </div>
-
-                        <!-- Iqbal Day -->
-                        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-600 calendar-card" data-month="nov">
-                            <div class="flex justify-between items-start mb-3">
-                                <span class="bg-blue-100 text-blue-800 font-bold text-xs px-3 py-1 rounded-full uppercase">National Holiday</span>
-                                <span class="text-xs text-gray-500 font-semibold"><i class="far fa-calendar-alt mr-1"></i> Nov 9, 2026</span>
-                            </div>
-                            <h3 class="text-lg font-bold text-blue-900 mb-1">Allama Iqbal Day</h3>
-                            <p class="text-sm text-gray-600">Birthday of National Poet Dr. Allama Muhammad Iqbal. Public Holiday.</p>
-                        </div>
-
-                        <!-- Annual Exams -->
-                        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-yellow-500 calendar-card" data-month="dec">
-                            <div class="flex justify-between items-start mb-3">
-                                <span class="bg-yellow-100 text-yellow-800 font-bold text-xs px-3 py-1 rounded-full uppercase">Academic Exam</span>
-                                <span class="text-xs text-gray-500 font-semibold"><i class="far fa-calendar-alt mr-1"></i> Dec 7 - Dec 18</span>
-                            </div>
-                            <h3 class="text-lg font-bold text-blue-900 mb-1">Final Term Examinations</h3>
-                            <p class="text-sm text-gray-600">Annual term final examinations for academic year promotion.</p>
-                        </div>
-
-                        <!-- Quaid-e-Azam Day & Winter Break -->
-                        <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-purple-600 calendar-card" data-month="dec">
-                            <div class="flex justify-between items-start mb-3">
-                                <span class="bg-purple-100 text-purple-800 font-bold text-xs px-3 py-1 rounded-full uppercase">Vacation & Holiday</span>
-                                <span class="text-xs text-gray-500 font-semibold"><i class="far fa-calendar-alt mr-1"></i> Dec 24 - Dec 31</span>
-                            </div>
-                            <h3 class="text-lg font-bold text-blue-900 mb-1">Quaid-e-Azam Day & Winter Break</h3>
-                            <p class="text-sm text-gray-600">Quaid-e-Azam's Birthday / Christmas (Dec 25) & Annual Winter Vacations.</p>
-                        </div>
-
                     </div>
                 </div>
             </section>
@@ -838,12 +761,19 @@
                 <h4 class="text-white text-lg font-bold mb-4">Our Address</h4>
                 <ul class="space-y-2 text-sm">
                     <li><i class="fas fa-map-marker-alt mr-2 text-yellow-500"></i> Gateway Public High School, Main Bazar Rehman Pura, Lahore, Punjab, Pakistan</li>
-                    <li><i class="fas fa-phone mr-2 text-yellow-500"></i> +92 343-4466136</li>
+                    <li><i class="fas fa-phone mr-2 text-yellow-500"></i> +92 300-7995900</li>
                     <li><i class="fas fa-envelope mr-2 text-yellow-500"></i> info@gatewaypublic.edu.pk</li>
                 </ul>
             </div>
             
-            
+            <div>
+                <h4 class="text-white text-lg font-bold mb-4">Resources</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" class="hover:text-yellow-500 transition">FAQs</a></li>
+                    <li><a href="#" class="hover:text-yellow-500 transition">Careers</a></li>
+                    <li><a href="#" class="hover:text-yellow-500 transition">Campus Portal</a></li>
+                </ul>
+            </div>
             
             <div>
                 <h4 class="text-white text-lg font-bold mb-4">Newsletter</h4>
@@ -860,26 +790,8 @@
         </div>
     </footer>
 
-    <!-- JavaScript Navigation Switcher, Calendar Filter & Mobile Menu -->
+    <!-- JavaScript Navigation & WhatsApp Handler -->
     <script>
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
-        }
-
-        function filterCalendar() {
-            const filterValue = document.getElementById('monthFilter').value;
-            const cards = document.querySelectorAll('.calendar-card');
-
-            cards.forEach(card => {
-                if (filterValue === 'all' || card.getAttribute('data-month') === filterValue) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        }
-
         function showPage(pageId) {
             // Hide all page sections
             document.getElementById('page-home').classList.add('hidden');
@@ -888,7 +800,7 @@
             document.getElementById('page-admissions').classList.add('hidden');
             document.getElementById('page-calendar').classList.add('hidden');
 
-            // Reset Desktop navbar styles
+            // Reset navbar active styles
             const navHome = document.getElementById('nav-home');
             const navAbout = document.getElementById('nav-about');
             const navAcademics = document.getElementById('nav-academics');
@@ -901,78 +813,50 @@
             navHome.className = inactiveStyle;
             navAbout.className = inactiveStyle;
             navAcademics.className = inactiveStyle;
-            navAdmissions.className = inactiveStyle;
-            navCalendar.className = inactiveStyle;
+            if (navAdmissions) navAdmissions.className = inactiveStyle;
+            if (navCalendar) navCalendar.className = inactiveStyle;
 
-            // Reset Mobile navbar styles
-            const mNavHome = document.getElementById('mobile-nav-home');
-            const mNavAbout = document.getElementById('mobile-nav-about');
-            const mNavAcademics = document.getElementById('mobile-nav-academics');
-            const mNavAdmissions = document.getElementById('mobile-nav-admissions');
-            const mNavCalendar = document.getElementById('mobile-nav-calendar');
-
-            const mInactiveStyle = "block w-full text-left py-2 font-semibold text-gray-700 hover:text-blue-600 pl-2";
-            const mActiveStyle = "block w-full text-left py-2 font-semibold text-blue-600 border-l-4 border-blue-600 pl-2";
-
-            mNavHome.className = mInactiveStyle;
-            mNavAbout.className = mInactiveStyle;
-            mNavAcademics.className = mInactiveStyle;
-            mNavAdmissions.className = mInactiveStyle;
-            mNavCalendar.className = mInactiveStyle;
-
-            // Show selected page & set active styles
+            // Show selected page & set active style
             if (pageId === 'home') {
                 document.getElementById('page-home').classList.remove('hidden');
                 navHome.className = activeStyle;
-                mNavHome.className = mActiveStyle;
             } else if (pageId === 'about') {
                 document.getElementById('page-about').classList.remove('hidden');
                 navAbout.className = activeStyle;
-                mNavAbout.className = mActiveStyle;
             } else if (pageId === 'academics') {
                 document.getElementById('page-academics').classList.remove('hidden');
                 navAcademics.className = activeStyle;
-                mNavAcademics.className = mActiveStyle;
             } else if (pageId === 'admissions') {
                 document.getElementById('page-admissions').classList.remove('hidden');
-                navAdmissions.className = activeStyle;
-                mNavAdmissions.className = mActiveStyle;
+                if (navAdmissions) navAdmissions.className = activeStyle;
             } else if (pageId === 'calendar') {
                 document.getElementById('page-calendar').classList.remove('hidden');
-                navCalendar.className = activeStyle;
-                mNavCalendar.className = mActiveStyle;
+                if (navCalendar) navCalendar.className = activeStyle;
             }
-
-            // Close mobile menu when a page is selected
-            document.getElementById('mobile-menu').classList.add('hidden');
 
             // Scroll smoothly back to top when switching pages
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function sendToWhatsApp(event) {
-            event.preventDefault();
-
-            // Form Values
+        function sendWhatsAppEnquiry(e) {
+            e.preventDefault();
+            
             const studentName = document.getElementById('studentName').value;
             const fatherName = document.getElementById('fatherName').value;
-            const selectedClass = document.getElementById('selectedClass').value;
-            const phoneNumber = document.getElementById('phoneNumber').value;
-            const address = document.getElementById('address').value || 'Not Provided';
+            const targetClass = document.getElementById('targetClass').value;
+            const phone = document.getElementById('contactPhone').value;
+            const address = document.getElementById('residentialAddress').value;
 
-            // Target Phone Number
-            const targetNumber = "923434466136";
+            const targetPhoneNumber = "923434466136";
 
-            // Formatted Message Text
-            const message = `*NEW ADMISSION INQUIRY*%0A%0A` +
-                            `*Student Name:* ${encodeURIComponent(studentName)}%0A` +
-                            `*Father Name:* ${encodeURIComponent(fatherName)}%0A` +
-                            `*Class Applying:* ${encodeURIComponent(selectedClass)}%0A` +
-                            `*Contact Number:* ${encodeURIComponent(phoneNumber)}%0A` +
-                            `*Address:* ${encodeURIComponent(address)}`;
+            const message = `*Admission Inquiry - Gateway Public High School*%0A%0A` +
+                `*Student Name:* ${encodeURIComponent(studentName)}%0A` +
+                `*Father/Guardian Name:* ${encodeURIComponent(fatherName)}%0A` +
+                `*Class Applying For:* ${encodeURIComponent(targetClass)}%0A` +
+                `*Contact Phone:* ${encodeURIComponent(phone)}%0A` +
+                `*Residential Address:* ${encodeURIComponent(address || 'Not Provided')}`;
 
-            // Open WhatsApp with pre-filled message
-            window.open(`https://wa.me/${targetNumber}?text=${message}`, '_blank');
+            window.open(`https://wa.me/${targetPhoneNumber}?text=${message}`, '_blank');
         }
     </script>
 </body>
